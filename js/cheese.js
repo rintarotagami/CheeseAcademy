@@ -1,7 +1,8 @@
 var
     timer = 2000,
-    ui = document.getElementById('ui');
+    cheese = document.getElementById('cheese-wrapper');
 
 setInterval(function () {
-    ui.classList.toggle('switch');
+    cheese.classList.toggle('switch');
 }, timer);
+

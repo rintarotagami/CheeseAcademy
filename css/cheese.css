@@ -1,87 +1,9 @@
-body {
-    background: #000; /* 背景色を黒に設定 */
-    height: 100vh; /* 高さをビューポートの100%に設定 */
-    overflow: hidden; /* はみ出した内容を非表示に設定 */
-}
-#ui .pizza {
-    position: absolute; /* 絶対位置指定 */
-    width: 200px; /* 幅を200pxに設定 */
-    height: 200px; /* 高さを200pxに設定 */
-    top: 50%; /* 上端から50%の位置に設定 */
-    left: 50%; /* 左端から50%の位置に設定 */
-    margin: -100px 0 0 -100px; /* 中央に配置するためのマージン設定 */
-}
-#ui .pizza_piece {
-    position: absolute; /* 絶対位置指定 */
-    width: 200px; /* 幅を200pxに設定 */
-    height: 100px; /* 高さを100pxに設定 */
-    border-radius: 200px 200px 0 0; /* 上半円の形状にするためのボーダー設定 */
-    overflow: hidden; /* はみ出した内容を非表示に設定 */
-    transform-origin: center bottom; /* 変形の原点を中央下部に設定 */
-    transition: all 1000ms cubic-bezier(0.36, 0.1, 0.16, 1); /* トランジション効果を設定 */
-}
-#ui .pizza_piece .dough {
-    width: 200px; /* 幅を200pxに設定 */
-    height: 100px; /* 高さを100pxに設定 */
-    border-radius: 200px 200px 0 0; /* 上半円の形状にするためのボーダー設定 */
-    background: #ffff00; /* 背景色を黄色に設定 */
-    box-shadow: inset 12px 6px 0px #d56929; /* 内側に影をつけて立体感を出す */
-    transform: rotateZ(135deg); /* Z軸を中心に135度回転 */
-    transform-origin: center bottom; /* 変形の原点を中央下部に設定 */
-}
-#ui .pizza_piece.left {
-    transform: rotateZ(-90deg); /* Z軸を中心に-90度回転 */
-}
-#ui .pizza_piece.right {
-    transform: rotateZ(-45deg); /* Z軸を中心に-45度回転 */
-}
-#ui .cheese {
-    filter: blur(10px) contrast(30); /* ブラーとコントラストのフィルターを適用 */
-    width: 100%; /* 幅を100%に設定 */
-    height: 100vh; /* 高さをビューポートの100%に設定 */
-    background: #000; /* 背景色を黒に設定 */
-}
-#ui .cheese_ball {
-    position: absolute; /* 絶対位置指定 */
-    top: 50%; /* 上端から50%の位置に設定 */
-    left: 50%; /* 左端から50%の位置に設定 */
-    width: 30px; /* 幅を30pxに設定 */
-    height: 30px; /* 高さを30pxに設定 */
-    margin: -15px 0 0 -15px; /* 中央に配置するためのマージン設定 */
-    border-radius: 100%; /* 円形にするためのボーダー設定 */
-    background: #ffff00; /* 背景色を黄色に設定 */
-    transition: all 1000ms cubic-bezier(0.36, 0.1, 0.16, 1); /* トランジション効果を設定 */
-}
-#ui .cheese_ball.left_top {
-    transform: translate(-15px, -75px); /* 左上に移動 */
-}
-#ui .cheese_ball.right_top {
-    transform: translate(15px, -75px); /* 右上に移動 */
-}
-#ui .cheese_ball.left_bottom {
-    transform: translate(-15px, -30px); /* 左下に移動 */
-}
-#ui .cheese_ball.right_bottom {
-    transform: translate(15px, -30px); /* 右下に移動 */
-}
-#ui.switch .pizza_piece.left {
-    transform: rotateZ(-135deg); /* Z軸を中心に-135度回転 */
-}
-#ui.switch .pizza_piece.right {
-    transform: rotateZ(0deg); /* Z軸を中心に0度回転 */
-}
-#ui.switch .cheese_ball {
-    transition: all 1300ms cubic-bezier(0.36, 0.1, 0.16, 1); /* トランジション効果を設定（時間を長く設定） */
-}
-#ui.switch .cheese_ball.left_top {
-    transform: translate(0, 20px); /* 上に移動 */
-}
-#ui.switch .cheese_ball.right_top {
-    transform: translate(0, 0); /* 位置を変えず */
-}
-#ui.switch .cheese_ball.left_bottom {
-    transform: translate(-30px, -15px); /* 左下に移動 */
-}
-#ui.switch .cheese_ball.right_bottom {
-    transform: translate(30px, -15px); /* 右下に移動 */
+#cheese-wrapper {
+    position: absolute; 
+    width: 400px;
+    height: 300px;
+    top: 0;
+    right: 0;
+    transform: translateY(50%);
+    margin: -100px 0 0 -100px; 
 }
