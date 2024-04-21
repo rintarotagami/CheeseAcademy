@@ -1,8 +1,9 @@
-body{
-    font-family: "Noto Sans JP","Helvetica","Arial","sans-serif";
+body {
+    font-family: "M PLUS 1", " Bebas Neue", " Noto Sans JP", " Helvetica", " Arial", " sans-serif";
+    overflow-x: hidden;
 }
 
-.vcent{
+.vcent {
     display: flex;
     align-items: center;
 }
@@ -34,14 +35,14 @@ header {
     float: left;
 }
 
-#bgbox{
+#bgbox {
     width: 100%;
     margin: 0;
     padding: 150px 0;
     top: 50px;
 }
 
-#bgbox::before{
+#bgbox::before {
     content: '';
     position: absolute;
     top: 0;
@@ -52,7 +53,7 @@ header {
     transform: skewY(-7deg);
 }
 
-#logo{
+#logo {
     width: 100px;
 }
 
@@ -68,19 +69,39 @@ header {
     height: 10px;
 }
 
+.fadeUp {
+    animation-name: fadeUpAnime;
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
+    opacity: 0;
+}
+
+@keyframes fadeUpAnime {
+    from {
+        opacity: 0;
+        transform: translateY(100px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 h1 {
-    font-family:"Rampart One";
+    position: relative;
+    font-family: "Rampart One";
     font-size: 5rem;
     padding-bottom: 50px;
     z-index: 1;
 }
 
-h1>span{
+h1>span {
     position: relative;
     background: linear-gradient(transparent 70%, #756300 10%);
 }
 
-h1>span::after{
+h1>span::after {
     content: '';
     position: absolute;
     bottom: 0;
@@ -96,13 +117,49 @@ h1>span::after{
         width: 100%;
     }
 }
+
 h2 {
+    position: relative;
     font-size: 1.5rem;
 }
 
 h3 {
-    font-size: 2rem;
-    padding: 20px 0;
+    font-size: 1.8rem;
+    text-align: center;
+    font-family: "Anton";
+    font-weight: 1000;
+    font-style: normal;
+    margin: 40px 0;
+
+}
+
+
+
+h3>span {
+    background: linear-gradient(transparent 50%, #fef549 20%);
+}
+
+h4 {
+    font-size: 3.2rem;
+    position: relative;
+    text-align: center;
+    color: transparent;
+    -webkit-text-stroke: 2px #454545;
+    text-shadow: 3px 3px #fef549;
+
+}
+
+h5 {
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+.titleContainer {
+    margin-bottom: 2rem;
+}
+
+p {
+    text-align: center;
 }
 
 section {
@@ -110,36 +167,57 @@ section {
     display: flex;
     justify-content: center;
     width: 100%;
-    height: 80vh;
+    padding: 50px 0;
 }
 
-.container{
+.container {
     height: 100%;
-    width: 80%;
+    width: 85%;
 }
 
-#top{
+button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: #fff;
+    background-color: #f0ad4e;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #ec971f;
+}
+
+#top {
     height: 100vh;
     width: 100vw;
-    background-color: #fef549;
+    /* background-color: #fef549; */
     background-repeat: no-repeat;
     background-size: cover;
 }
 
-#about-wrapper{
+#cheeseBackground {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#about-wrapper {
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
 
-#about-wrapper h3{
-    font-size: 5rem;
-}
-
-#about-wrapper p{
-    font-size: 1.5rem;
-    margin-bottom: 10vh;
-    line-height: 1.5;
+#about-wrapper p {
+    text-align: center;
+    font-size: 1rem;
+    margin-bottom: 3rem;
+    line-height: 2;
 }
 
 #course-wrapper ul {
@@ -149,42 +227,82 @@ section {
 }
 
 #course-wrapper ul li {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     border: 1px solid #ccc;
     border-radius: 8px;
-    padding: 20px;
+    padding: 25px 50px;
     margin: 10px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     background-color: #fff;
     width: calc(33.333% - 20px);
 }
 
-#course-wrapper .course-name {
+.course-name {
+    font-size: 1.1rem;
     font-weight: bold;
     margin-bottom: 10px;
 }
 
-#access{
+#course-wrapper img {
+    width: 100%;
+    height: 100%;
+    margin-bottom: 1rem;
+    object-fit: cover
+}
+
+#course-wrapper p {
+    margin-bottom: 3rem;
+}
+
+.cheesePin {
+    position: absolute;
+    width: 2rem;
+    height: 2rem;
+    top: 0;
+    transform: translateY(-50%);
+}
+
+.cheesePin img {
+    filter: drop-shadow(0 0 1px #000);
+}
+
+#access {
     background-color: #fef549;
 }
 
-.access-wrapper {
+#access-wrapper {
+    margin-bottom: 5rem;
+    height: 20rem;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 }
 
+#access-wrapper tr {
+    border-bottom: dotted 5px #fff;
+}
+
+#access-wrapper table td, 
+#access-wrapper table th {
+    padding: 10px;
+}
+
+
+#contact p{
+    margin-bottom: 2rem;
+}
 
 form {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    padding: 20px;
+    padding: 40px;
     background-color: #f8f8f8;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 form div {
@@ -203,12 +321,13 @@ form textarea {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    width: 100%; /* 他のテキストエディタと同じ横幅になるように設定 */
+    width: 100%;
+    /* 他のテキストエディタと同じ横幅になるように設定 */
 }
 
 form button[type="submit"] {
     padding: 10px 20px;
-    background-color: #fef549;
+    background-color: #f0ad4e;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -216,7 +335,7 @@ form button[type="submit"] {
 }
 
 form button[type="submit"]:hover {
-    background-color: #ebe645;
+    background-color: #f3a63b;
 }
 
 
@@ -227,6 +346,6 @@ footer {
     align-items: center;
     height: 15vh;
     background-color: #C7C7C7;
-    color:white;
+    color: white;
     font-size: 1.2rem;
 }

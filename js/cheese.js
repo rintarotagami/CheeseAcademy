@@ -1,8 +1,9 @@
-var
-    timer = 2000,
-    cheese = document.getElementById('cheese-wrapper');
+var cheese = document.getElementById('cheese-wrapper');
 
-setInterval(function () {
-    cheese.classList.toggle('switch');
-}, timer);
-
+window.addEventListener('scroll', function() {
+    var cheesePosition = cheese.getBoundingClientRect().top;
+    var screenPosition = window.innerHeight;
+    if(cheesePosition < screenPosition){
+        cheese.classList.toggle('switch');
+    }
+});
