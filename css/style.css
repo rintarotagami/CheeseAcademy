@@ -98,24 +98,7 @@ h1 {
 
 h1>span {
     position: relative;
-    background: linear-gradient(transparent 70%, #756300 10%);
-}
-
-h1>span::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background-color: #756300;
-    animation: lineGrow 2s forwards;
-}
-
-@keyframes lineGrow {
-    to {
-        width: 100%;
-    }
+    background: linear-gradient(transparent 70%, #d8ad00 10%);
 }
 
 h2 {

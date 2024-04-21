@@ -39,7 +39,7 @@ function init() {
     controls.dampingFactor = 0.2;
     controls.enableZoom = false; // スクロールでのズームイン・ズームアウトを無効化
 
-    // 3Dモデルの読み込みとクローンの作成
+    // 3Dモデルの読み込みとランダム配置のクローン作成、画面外も含む
     const loader = new THREE.GLTFLoader();
     loader.load(
         //3Dモデルファイルのパスを指定
@@ -47,22 +47,22 @@ function init() {
         function (glb) {
             const originalModel = glb.scene;
             originalModel.name = "original_cheese";
-            originalModel.scale.set(80.0, 80.0, 80.0);
-            originalModel.position.set(0, -200, 0);
-            scene.add(originalModel);
+            originalModel.scale.set(80.0, 80.0, 80.0); // 元のモデルの大きさを設定
+            // 元のモデルはシーンに追加しない
 
-            // クローンを作成してシーンに追加
-            for (let i = 0; i < 10; i++) {
+            // クローンをランダムな位置と大きさで作成してシーンに追加、画面外も含む
+            for (let i = 0; i < 150; i++) { // クローンの数を増やす
                 const clone = originalModel.clone();
-                clone.position.x = Math.random() * 40 - 20;
-                clone.position.y = Math.random() * 40 - 20;
-                clone.position.z = Math.random() * 40 - 20;
-            
+                // 画面外を含めた全体にランダムに配置
+                clone.position.x = (Math.random() - 0.5) * width * 2; // 幅の2倍の範囲でランダム
+                clone.position.y = (Math.random() - 0.5) * height * 2; // 高さの2倍の範囲でランダム
+                clone.position.z = (Math.random() - 0.5) * 2000; // 奥行きの範囲を広げる
+                
                 clone.rotation.x = Math.random() * Math.PI;
                 clone.rotation.y = Math.random() * Math.PI;
                 clone.rotation.z = Math.random() * Math.PI;
-            
-                let scale = Math.random() * 0.15;
+                
+                let scale = 15 + Math.random() * 6.5; // 大きさをランダムに
                 clone.scale.set(scale, scale, scale);
                 scene.add(clone);
             }
@@ -82,3 +82,13 @@ function init() {
         requestAnimationFrame(tick);
     }
 } 
+
+// ウィンドウのリサイズイベントに対応
+window.addEventListener('resize', () => {
+    // カメラのアスペクト比を更新
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+
+    // レンダラーのサイズを更新
+    renderer.setSize(window.innerWidth, window.innerHeight);
+});
