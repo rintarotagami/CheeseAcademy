@@ -13,7 +13,7 @@ const cheeseImage = '../svg/cheese.svg';
 let game = {
     player: { x: 25, y: 9, direction: 'right', image: mouseRightImage, score: 0, moving: false }, // プレイヤーの初期位置、画像、得点、移動状態を調整
     cheese: [], // チーズの位置を空の配列で初期化
-    cat: { x: 10, y: 4, direction: 'left', image: catRightImage, moving: false }, // 猫の位置、画像、移動状態を調整
+    cat: { x: 10, y: 3, direction: 'left', image: catRightImage, moving: false }, // 猫の位置、画像、移動状態を調整
     maze: generateMaze(52, 20), // 迷路のサイズを縦21×横51に変更
     cheeseImage: null // チーズのImageオブジェクトを格納するためのプロパティを追加
 };
@@ -331,36 +331,43 @@ function gameLoop() {
 }
 
 function updateGame() {
+    // プレイヤーの移動更新頻度を下げるためのカウンタ
+    if (!game.player.moveCounter) {
+        game.player.moveCounter = 0;
+    }
     // プレイヤーの連続移動処理
     if (game.player.moving) {
-        let newX = game.player.x;
-        let newY = game.player.y;
-        let newCatX = game.cat.x;
-        let newCatY = game.cat.y;
-        switch (game.player.direction) {
-            case 'top':
-                newY -= 1; // プレイヤーの移動量を調整
-                break;
-            case 'down':
-                newY += 1; // プレイヤーの移動量を調整
-                break;
-            case 'left':
-                newX -= 1; // プレイヤーの移動量を調整
-                break;
-            case 'right':
-                newX += 1; // プレイヤーの移動量を調整
-                break;
+        game.player.moveCounter++;
+        // 4回に1回の更新頻度に調整
+        if (game.player.moveCounter % 4 === 0) {
+            let newX = game.player.x;
+            let newY = game.player.y;
+            let newCatX = game.cat.x;
+            let newCatY = game.cat.y;
+            switch (game.player.direction) {
+                case 'top':
+                    newY -= 1; // プレイヤーの移動量を調整
+                    break;
+                case 'down':
+                    newY += 1; // プレイヤーの移動量を調整
+                    break;
+                case 'left':
+                    newX -= 1; // プレイヤーの移動量を調整
+                    break;
+                case 'right':
+                    newX += 1; // プレイヤーの移動量を調整
+                    break;
+            }
+            // 迷路との衝突判定を新しい位置で行う
+            if (!checkMazeCollision(newX, newY)) {
+                game.player.x = newX;
+                game.player.y = newY;
+            }
+            if (!checkCatMazeCollision(newCatX, newCatY)) {
+                game.cat.x = newCatX;
+                game.cat.y = newCatY;
+            }
         }
-        // 迷路との衝突判定を新しい位置で行う
-        if (!checkMazeCollision(newX, newY)) {
-            game.player.x = newX;
-            game.player.y = newY;
-        }
-        if (!checkCatMazeCollision(newCatX, newCatY)) {
-            game.cat.x = newCatX;
-            game.cat.y = newCatY;
-        }
-
     }
 
     // 壁にぶつかった場合は壁の方向以外でプレイヤーに最も近い方向へ移動するように修正
@@ -398,6 +405,7 @@ function updateGame() {
     // プレイヤーが猫に捕まったかの判定
     if (game.player.x === game.cat.x && game.player.y === game.cat.y) {
         // ゲームオーバー時にプレイヤーと猫の位置を初期値に戻す
+        alert("猫に捕まった!");
         game.player.x = 25;
         game.player.y = 9;
         game.player.direction = 'right';
@@ -450,3 +458,4 @@ function drawGame() {
     catImage.src = game.cat.image;
     ctx.drawImage(catImage, game.cat.x * 20, game.cat.y * 20, 20, 20);
 }
+
