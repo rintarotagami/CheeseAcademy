@@ -39,6 +39,42 @@ function init() {
     controls.dampingFactor = 0.2;
     controls.enableZoom = false; // スクロールでのズームイン・ズームアウトを無効化
 
+    // ウィンドウのリサイズイベントに対応
+    window.addEventListener('resize', () => {
+        // カメラのアスペクト比を更新
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+
+        // レンダラーのサイズを更新
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    let angle = 0;
+    let isMouseMoving = false;
+
+    // マウスの動きに応じてカメラを中心の周りをゆっくり回転させる
+    window.addEventListener('mousemove', (event) => {
+        isMouseMoving = true;
+        angle += event.movementX * 0.0005; // マウスの動きに応じて角度をゆっくり調整
+        camera.position.x = 1500 * Math.sin(angle);
+        camera.position.z = 1500 * Math.cos(angle);
+        camera.lookAt(scene.position); // カメラを常に中心に向ける
+        if (window.mouseMoveTimeout) clearTimeout(window.mouseMoveTimeout); // 既存のタイムアウトをクリア
+        window.mouseMoveTimeout = setTimeout(() => {
+            isMouseMoving = false;
+        }, 500); // 一定時間マウスの動きがなければ自動回転を停止
+    });
+
+    function rotateCamera() {
+        requestAnimationFrame(rotateCamera); // アニメーションフレームをリクエスト
+        if (!isMouseMoving) {
+            angle += 0.001;
+            camera.position.x = 1500 * Math.sin(angle);
+            camera.position.z = 1500 * Math.cos(angle);
+            camera.lookAt(scene.position); // カメラを常に中心に向ける
+        }
+    }
+    rotateCamera(); // rotateCamera関数を呼び出して自動回転を開始
     // 3Dモデルの読み込みとランダム配置のクローン作成、画面外も含む
     const loader = new THREE.GLTFLoader();
     loader.load(
@@ -57,12 +93,12 @@ function init() {
                 clone.position.x = (Math.random() - 0.5) * width * 2; // 幅の2倍の範囲でランダム
                 clone.position.y = (Math.random() - 0.5) * height * 2; // 高さの2倍の範囲でランダム
                 clone.position.z = (Math.random() - 0.5) * 2000; // 奥行きの範囲を広げる
-                
+
                 clone.rotation.x = Math.random() * Math.PI;
                 clone.rotation.y = Math.random() * Math.PI;
                 clone.rotation.z = Math.random() * Math.PI;
-                
-                let scale = 15 + Math.random() * 6.5; // 大きさをランダムに
+
+                let scale = 15 + Math.random() * 9.5; // 大きさをランダムに
                 clone.scale.set(scale, scale, scale);
                 scene.add(clone);
             }
@@ -72,7 +108,7 @@ function init() {
         }
     );
 
-    
+
 
     // リアルタイムレンダリング
     tick();
@@ -81,14 +117,8 @@ function init() {
         renderer.render(scene, camera);
         requestAnimationFrame(tick);
     }
-} 
+}
 
-// ウィンドウのリサイズイベントに対応
-window.addEventListener('resize', () => {
-    // カメラのアスペクト比を更新
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
 
-    // レンダラーのサイズを更新
-    renderer.setSize(window.innerWidth, window.innerHeight);
-});
+
+

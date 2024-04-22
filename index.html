@@ -41,8 +41,7 @@
     </section>
     <section id="about">
         <div id="cheese-wrapper">
-            <lottie-player src="./json/meltedCheese_animation.json" background="transparent" speed="1"
-                autoplay></lottie-player>
+            <lottie-player src="./json/meltedCheese_animation.json" background="transparent" speed="1"></lottie-player>
         </div>
         <div class="container">
             <div id="about-wrapper">
@@ -59,7 +58,7 @@
             </div>
         </div>
     </section>
-    <section id="Course">
+    <section id="course">
         <div class="container">
             <div id="course-wrapper">
                 <div class="titleContainer">
@@ -220,10 +219,16 @@
             </form>
         </div>
     </section>
+    <section id="packmouse">
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+    </section>
+
     <footer>
-        <div class="container vcent">
+        <div id="footer-wrapper" class="container vcent">
             <p>© 2016 Cheeese Academy Tokyo All RIghts Reserved.</p>
-        </div>
+            <div id="mouse-wrapper">
+                <lottie-player  src="json/Mouse_Clickme.json" background="transparent" speed="1" style="width: 100px; height: 100px;" hover></lottie-player>
+            </div>
     </footer>
     <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
@@ -232,6 +237,7 @@
     <script src="https://unpkg.com/three@0.147.0/examples/js/controls/OrbitControls.js"></script>
     <script src="https://unpkg.com/three@0.142.0/examples/js/loaders/GLTFLoader.js"></script>
     <script src="./js/index.js"></script>
+    <script src="./js/packmouse.js"></script>
 </body>
 
 </html>
