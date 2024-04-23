@@ -1,19 +1,40 @@
 // 画像の読み込み
-const catDownImage = '../svg/catDown.svg';
-const catUpImage = '../svg/catUp.svg';
-const catLeftImage = '../svg/catLeft.svg';
-const catRightImage = '../svg/catRight.svg';
-const mouseDownImage = '../svg/mouseDown.svg';
-const mouseUpImage = '../svg/mouseUp.svg';
-const mouseLeftImage = '../svg/mouseLeft.svg';
-const mouseRightImage = '../svg/mouseRight.svg';
-const cheeseImage = '../svg/cheese.svg';
+const images = {};
+
+function loadImages(callback) {
+    let loadedImagesCount = 0;
+    const imageSources = {
+        catDown: '../svg/catDown.svg',
+        catUp: '../svg/catUp.svg',
+        catLeft: '../svg/catLeft.svg',
+        catRight: '../svg/catRight.svg',
+        mouseDown: '../svg/mouseDown.svg',
+        mouseUp: '../svg/mouseUp.svg',
+        mouseLeft: '../svg/mouseLeft.svg',
+        mouseRight: '../svg/mouseRight.svg',
+        cheese: '../svg/cheese.svg'
+    };
+    const imageKeys = Object.keys(imageSources);
+    const imagesToLoad = imageKeys.length;
+
+    imageKeys.forEach(key => {
+        const img = new Image();
+        img.onload = () => {
+            loadedImagesCount++;
+            if (loadedImagesCount === imagesToLoad) {
+                callback(); // すべての画像が読み込まれたらコールバックを実行
+            }
+        };
+        img.src = imageSources[key];
+        images[key] = img;
+    });
+}
 
 // ゲームの状態
 let game = {
-    player: { x: 25, y: 9, direction: 'right', image: mouseRightImage, score: 0, moving: false }, // プレイヤーの初期位置、画像、得点、移動状態を調整
+    player: { x: 25, y: 9, direction: 'right', imageKey: 'mouseRight', score: 0, moving: false }, // プレイヤーの初期位置、画像キー、得点、移動状態を調整
     cheese: [], // チーズの位置を空の配列で初期化
-    cat: { x: 10, y: 3, direction: 'left', image: catRightImage, moving: false }, // 猫の位置、画像、移動状態を調整
+    cat: { x: 10, y: 3, direction: 'left', imageKey: 'catRight', moving: false }, // 猫の位置、画像キー、移動状態を調整
     maze: generateMaze(52, 20), // 迷路のサイズを縦21×横51に変更
     cheeseImage: null // チーズのImageオブジェクトを格納するためのプロパティを追加
 };
@@ -30,13 +51,13 @@ canvas.style.transform = 'translate(-50%, -50%)';
 ctx.fillStyle = 'yellow'; // 背景色を黄色に変更
 ctx.fillRect(0, 0, canvas.width, canvas.height); // キャンバス全体を黄色で塗りつぶす
 
-
 // ゲームの初期化
 function initGame() {
-    game.cheeseImage = new Image();
-    game.cheeseImage.src = cheeseImage; // チーズの画像パスを設定
-    window.addEventListener('keydown', handleKeyDown);
-    gameLoop();
+    loadImages(() => {
+        game.cheeseImage = images.cheese; // チーズの画像を設定
+        window.addEventListener('keydown', handleKeyDown);
+        gameLoop();
+    });
 }
 
 // チーズの位置を生成する関数を迷路生成後に呼び出す
@@ -47,14 +68,12 @@ function generateCheesePositions(maze) {
     for (let y = 0; y < maze.length; y++) {
         for (let x = 0; x < maze[y].length; x++) {
             if (maze[y][x] === 0) { // 壁がない場所を探す
-                cheesePositions.push({ x: x, y: y, image: cheeseImage }); // 壁がない場所にチーズを配置
+                cheesePositions.push({ x: x, y: y, image: images.cheese }); // 壁がない場所にチーズを配置
             }
         }
     }
     return cheesePositions;
 }
-
-
 
 // generateMaze関数の定義
 function generateMaze(width, height) {
@@ -267,25 +286,25 @@ function handleKeyDown(event) {
         case 'ArrowUp':
         case 'w':
             game.player.direction = 'top';
-            game.player.image = mouseUpImage; // 上向きの画像に変更
+            game.player.imageKey = 'mouseUp'; // 上向きの画像キーに変更
             game.player.moving = true;
             break;
         case 'ArrowDown':
         case 's':
             game.player.direction = 'down';
-            game.player.image = mouseDownImage; // 下向きの画像に変更
+            game.player.imageKey = 'mouseDown'; // 下向きの画像キーに変更
             game.player.moving = true;
             break;
         case 'ArrowLeft':
         case 'a':
             game.player.direction = 'left';
-            game.player.image = mouseLeftImage; // 左向きの画像に変更
+            game.player.imageKey = 'mouseLeft'; // 左向きの画像キーに変更
             game.player.moving = true;
             break;
         case 'ArrowRight':
         case 'd':
             game.player.direction = 'right';
-            game.player.image = mouseRightImage; // 右向きの画像に変更
+            game.player.imageKey = 'mouseRight'; // 右向きの画像キーに変更
             game.player.moving = true;
             break;
     }
@@ -323,6 +342,8 @@ function checkCatMazeCollision(x, y) {
 }
 
 
+
+
 // ゲームの更新と描画
 function gameLoop() {
     updateGame();
@@ -339,7 +360,7 @@ function updateGame() {
     if (game.player.moving) {
         game.player.moveCounter++;
         // 4回に1回の更新頻度に調整
-        if (game.player.moveCounter % 4 === 0) {
+        if (game.player.moveCounter % 8 === 0) {
             let newX = game.player.x;
             let newY = game.player.y;
             let newCatX = game.cat.x;
@@ -370,7 +391,16 @@ function updateGame() {
         }
     }
 
-    // 壁にぶつかった場合は壁の方向以外でプレイヤーに最も近い方向へ移動するように修正
+    // プレイヤーがチーズと重なったかの判定とチーズの削除、スコアの更新
+    game.cheese = game.cheese.filter(cheese => {
+        if (cheese.x === game.player.x && cheese.y === game.player.y) {
+            game.player.score += 100; // スコアに100点を追加
+            return false; // このチーズを配列から削除
+        }
+        return true; // このチーズを配列に残す
+    });
+
+    // Y軸方向とX軸方向に交互に近づくように修正
     if (!game.cat.moving) {
         game.cat.moving = true;
         setTimeout(() => {
@@ -378,21 +408,47 @@ function updateGame() {
             let newY = game.cat.y;
             let directionX = game.player.x - game.cat.x;
             let directionY = game.player.y - game.cat.y;
-            let possibleMoves = [];
-            if (directionX !== 0) {
-                possibleMoves.push({ x: newX + Math.sign(directionX), y: newY });
-            }
-            if (directionY !== 0) {
-                possibleMoves.push({ x: newX, y: newY + Math.sign(directionY) });
-            }
-            // 壁にぶつかった場合、可能な移動を試みる
-            for (let move of possibleMoves) {
-                if (!checkCatMazeCollision(move.x, move.y)) {
-                    newX = move.x;
-                    newY = move.y;
-                    break; // 最初に見つかった可能な移動に更新
+            let moveAttempted = false;
+
+            // 交互に移動を試みるためのフラグを使用
+            if (game.cat.lastMove === 'y' || game.cat.lastMove === undefined) {
+                if (directionX !== 0) {
+                    newX += Math.sign(directionX);
+                    if (!checkCatMazeCollision(newX, newY)) {
+                        moveAttempted = true;
+                        game.cat.lastMove = 'x';
+                    } else {
+                        newX = game.cat.x; // 移動できない場合は元に戻す
+                    }
+                }
+                if (!moveAttempted && directionY !== 0) {
+                    newY += Math.sign(directionY);
+                    if (!checkCatMazeCollision(newX, newY)) {
+                        game.cat.lastMove = 'y';
+                    } else {
+                        newY = game.cat.y; // 移動できない場合は元に戻す
+                    }
+                }
+            } else if (game.cat.lastMove === 'x') {
+                if (directionY !== 0) {
+                    newY += Math.sign(directionY);
+                    if (!checkCatMazeCollision(newX, newY)) {
+                        moveAttempted = true;
+                        game.cat.lastMove = 'y';
+                    } else {
+                        newY = game.cat.y; // 移動できない場合は元に戻す
+                    }
+                }
+                if (!moveAttempted && directionX !== 0) {
+                    newX += Math.sign(directionX);
+                    if (!checkCatMazeCollision(newX, newY)) {
+                        game.cat.lastMove = 'x';
+                    } else {
+                        newX = game.cat.x; // 移動できない場合は元に戻す
+                    }
                 }
             }
+
             // 移動可能な場合、猫の位置を更新
             if (newX !== game.cat.x || newY !== game.cat.y) {
                 game.cat.x = newX;
@@ -409,12 +465,12 @@ function updateGame() {
         game.player.x = 25;
         game.player.y = 9;
         game.player.direction = 'right';
-        game.player.image = mouseRightImage; // 初期の画像に戻す
+        game.player.imageKey = 'mouseRight'; // 初期の画像キーに戻す
         game.player.moving = false; // 移動を停止
         game.cat.x = 10;
         game.cat.y = 5;
         game.cat.direction = 'left';
-        game.cat.image = catRightImage; // 初期の画像に戻す
+        game.cat.imageKey = 'catRight'; // 初期の画像キーに戻す
         game.cat.moving = false; // 移動を停止
         // ゲームを再読み込み
         initGame();
@@ -449,13 +505,10 @@ function drawGame() {
     });
 
     // プレイヤーの描画
-    const playerImage = new Image();
-    playerImage.src = game.player.image;
+    const playerImage = images[game.player.imageKey]; // 画像キーを使用してImageオブジェクトを取得
     ctx.drawImage(playerImage, game.player.x * 20, game.player.y * 20, 20, 20);
 
     // 猫の描画
-    const catImage = new Image();
-    catImage.src = game.cat.image;
+    const catImage = images[game.cat.imageKey]; // 画像キーを使用してImageオブジェクトを取得
     ctx.drawImage(catImage, game.cat.x * 20, game.cat.y * 20, 20, 20);
 }
-
