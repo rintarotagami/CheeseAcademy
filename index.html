@@ -227,10 +227,12 @@
                 <div id="soundtoggle"></div>
             </div>
             <div id="gameCanvas-wrapper"><canvas id="gameCanvas" width="800" height="600"></canvas></div>
-            <div class="display-wrapper">
-                <div id="lifeDisplay"></div>
-                <div id="itemDisplay"></div>
-            </div>    
+            <div id="lifeDisplay">
+                <div><img src="img/dotheart.png" id="lives1" loop="true" alt=""></div>
+                <div><img src="img/dotheart.png" id="lives2" loop="true" alt=""></div>
+                <div><img src="img/dotheart.png" id="lives3" loop="true" alt=""></div>
+            </div>
+            <div id="itemDisplay"></div>
         </div>
     </section>
 
@@ -238,7 +240,8 @@
         <div id="footer-wrapper" class="container vcent">
             <p>© 2024 Cheeese Academy Tokyo All RIghts Reserved.</p>
             <div id="mouse-wrapper">
-                <lottie-player  src="json/Mouse_Clickme.json" background="transparent" speed="1" style="width: 100px; height: 100px;" hover></lottie-player>
+                <lottie-player src="json/Mouse_Clickme.json" background="transparent" speed="1"
+                    style="width: 100px; height: 100px;" hover></lottie-player>
             </div>
     </footer>
     <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>

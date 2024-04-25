@@ -14,10 +14,11 @@ document.getElementById('soundtoggle').addEventListener('click', function () {
     }
 });
 
-
+let audioPlayer = new Audio('CheeseAcademy/sound/EscapeTheChase.mp3');
 
 document.getElementById('mouse-wrapper').addEventListener('click', function () {
-    gamePlaying = true; // ゲーム中に設定
+    gamePlaying = true;
+    audioPlayer.play();
     console.log(gamePlaying + "に変更");
 
     const packmouse = document.getElementById('packmouse');
@@ -520,20 +521,30 @@ function updateGame() {
 
     // プレイヤーが猫に捕まったかの判定
     if (game.player.x === game.cat.x && game.player.y === game.cat.y) {
-        // ゲームオーバー時にプレイヤーと猫の位置を初期値に戻す
-        alert("猫に捕まった!");
-        game.player.x = 25;
-        game.player.y = 10;
-        game.player.direction = 'right';
-        game.player.imageKey = 'mouseRight'; // 初期の画像キーに戻す
-        game.player.moving = false; // 移動を停止
-        game.cat.x = 10;
-        game.cat.y = 7;
-        game.cat.direction = 'left';
-        game.cat.imageKey = 'catRight'; // 初期の画像キーに戻す
-        game.cat.moving = false; // 移動を停止
-        // ゲームを再読み込み
-        initGame();
+        // プレイヤーのライフを減らす
+        game.player.lives -= 1;
+        // HPが減るアニメーションを再生
+        playLivesDecreaseAnimation();
+
+        if (game.player.lives > 0) {
+            // ゲームオーバーではない場合、プレイヤーと猫の位置を初期値に戻す
+            alert("猫に捕まった! 残りライフ: " + game.player.lives);
+            game.player.x = 25;
+            game.player.y = 10;
+            game.player.direction = 'right';
+            game.player.imageKey = 'mouseRight'; // 初期の画像キーに戻す
+            game.player.moving = false; // 移動を停止
+            game.cat.x = 10;
+            game.cat.y = 7;
+            game.cat.direction = 'left';
+            game.cat.imageKey = 'catRight'; // 初期の画像キーに戻す
+            game.cat.moving = false; // 移動を停止
+        } else {
+            // ライフが0の場合、ゲームオーバー
+            alert("ゲームオーバー!");
+            game.player.score = 0; // スコアを0にリセット
+            initGame(); // ゲームを再読み込み
+        }
     }
     
 
@@ -541,6 +552,17 @@ function updateGame() {
     if (game.cheese.length === 0 && gamePlaying === false) {
         alert("You Win!");
         // 勝利時の処理
+    }
+}
+function playLivesDecreaseAnimation() {
+    if (game.player.lives === 2) {
+        document.getElementById('lives3').src = 'img/dotherat.gif';
+    }
+    if (game.player.lives === 1) {
+        document.getElementById('lives2').src = 'img/dotherat.gif';
+    }
+    if (game.player.lives === 0) {
+        document.getElementById('lives1').src = 'img/dotherat.gif';
     }
 }
 
@@ -585,5 +607,6 @@ function gameLoop() {
         updateGame();
         drawGame();
         requestAnimationFrame(gameLoop);
+
     }
 }
