@@ -11,7 +11,7 @@ body {
 header {
     position: fixed;
     top: 0;
-    z-index: 1000;
+    z-index: 10000;
     background-color: #fff;
     display: flex;
     width: 100%;
@@ -398,7 +398,7 @@ footer {
 #lifeDisplay{
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: flex-start;
     width: 15%;
 }
 

@@ -121,4 +121,18 @@ function init() {
 
 
 
+//チーズが溶けるアニメーションの実装--------------------------------------
+
+var cheese = document.getElementById('cheese-wrapper');
+var lottiePlayer = cheese.querySelector('lottie-player');
+
+window.addEventListener('scroll', function () {
+    var cheesePosition = cheese.getBoundingClientRect().top;
+    var screenPosition = window.innerHeight;
+    if (cheesePosition < screenPosition) {
+        lottiePlayer.play();
+    }
+});
+
+
 
