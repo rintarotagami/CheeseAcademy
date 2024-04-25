@@ -220,17 +220,23 @@
         </div>
     </section>
     <section id="packmouse">
-        <div class="container">
-            <div>
-                
+        <div id="game-wrapper" class="container">
+            <div id="closeButton"></div>
+            <div class="display-wrapper">
+                <div id="scoreDisplay"></div>
+                <div id="soundtoggle"></div>
             </div>
-            <canvas id="gameCanvas" width="800" height="600"></canvas>
+            <div id="gameCanvas-wrapper"><canvas id="gameCanvas" width="800" height="600"></canvas></div>
+            <div class="display-wrapper">
+                <div id="lifeDisplay"></div>
+                <div id="itemDisplay"></div>
+            </div>    
         </div>
     </section>
 
     <footer>
         <div id="footer-wrapper" class="container vcent">
-            <p>© 2016 Cheeese Academy Tokyo All RIghts Reserved.</p>
+            <p>© 2024 Cheeese Academy Tokyo All RIghts Reserved.</p>
             <div id="mouse-wrapper">
                 <lottie-player  src="json/Mouse_Clickme.json" background="transparent" speed="1" style="width: 100px; height: 100px;" hover></lottie-player>
             </div>

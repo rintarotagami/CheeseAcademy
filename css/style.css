@@ -340,3 +340,56 @@ footer {
 #packmouse {
     display: none;
 }
+
+
+.display-wrapper{
+    display: flex;
+    justify-content: space-between;
+    font-family: "DotGothic16";
+    font-size: 2.5rem;
+    width: 100%;
+    height: 50px;
+}
+
+#gameCanvas-wrapper{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: fit-content;
+}
+
+
+
+#closeButton{
+    float: right;
+    position: relative;
+    width: 30px;
+    height: 30px;
+    background-color: transparent;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    &:before,
+    &:after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 25px;
+        height: 3px;
+        background-color: #565454;
+        transform: translate(-50%, -50%) rotate(45deg);
+    }
+    &:after {
+        transform: translate(-50%, -50%) rotate(-45deg);
+    }
+}
+
+#soundtoggle{
+    background-image: url("../svg/soundON.svg");
+    width: 50px;
+    height: 100%;
+}
+#packmouse .container{
+    width: 90%;
+}

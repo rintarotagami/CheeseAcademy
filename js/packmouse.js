@@ -1,3 +1,83 @@
+let gamePlaying = false;
+
+let soundEnabled = true; // ゲームの音の初期状態を設定
+
+// soundtoggle要素にクリックイベントを追加
+document.getElementById('soundtoggle').addEventListener('click', function () {
+    soundEnabled = !soundEnabled; // 音の状態を切り替え
+    if (soundEnabled) {
+        document.getElementById('soundtoggle').style.backgroundImage = 'url("svg/soundON.svg")'; // 音がONの時の画像
+        // 音を有効にする処理
+    } else {
+        document.getElementById('soundtoggle').style.backgroundImage = 'url("svg/soundOff.svg")'; // 音がOFFの時の画像
+        // 音を無効にする処理
+    }
+});
+
+
+
+document.getElementById('mouse-wrapper').addEventListener('click', function () {
+    gamePlaying = true; // ゲーム中に設定
+    console.log(gamePlaying + "に変更");
+
+    const packmouse = document.getElementById('packmouse');
+    packmouse.style.display = 'flex'; // ブロック表示に変更
+    packmouse.style.position = 'fixed';
+    packmouse.style.left = '50%';
+    packmouse.style.top = '50%';
+    packmouse.style.transform = 'translate(-50%, -50%) scale(0)';
+    packmouse.style.width = '200vw';
+    packmouse.style.height = '200vh';
+    packmouse.style.borderRadius = '50%';
+    packmouse.style.backgroundColor = 'White';
+    packmouse.style.transition = 'transform 0.5s ease-in-out';
+    packmouse.style.zIndex = '9999'; // 一番上に表示されるようにz-indexを設定
+
+    // cheeseBackgroundを非表示に変更
+    const cheeseBackground = document.getElementById('cheeseBackground');
+    cheeseBackground.style.display = 'none';
+
+    setTimeout(() => {
+        packmouse.style.transform = 'translate(-50%, -50%) scale(1)';
+    }, 10);
+
+    setTimeout(() => {
+        packmouse.style.width = '100vw';
+        packmouse.style.height = '100vh';
+        packmouse.style.transition = 'transform 0.5s ease-in-out, borderRadius 0.5s ease-in-out'; // borderRadiusのアニメーションを修正
+        packmouse.style.borderRadius = '0%';
+        document.body.style.overflow = 'hidden'; // スクロールを無効化
+        window.scrollTo(0, 0); // スクロール位置をトップにリセット
+        // ゲームの開始
+        initGame();
+    }, 510); // transformのアニメーション時間徫実行
+});
+
+document.getElementById('closeButton').addEventListener('click', function () {
+    gamePlaying = false;
+
+    const packmouse = document.getElementById('packmouse');
+    packmouse.style.display = 'none'; // 元の表示状態に戻す
+    packmouse.style.position = '';
+    packmouse.style.left = '';
+    packmouse.style.top = '';
+    packmouse.style.transform = '';
+    packmouse.style.width = '';
+    packmouse.style.height = '';
+    packmouse.style.borderRadius = '';
+    packmouse.style.backgroundColor = '';
+    packmouse.style.transition = '';
+    packmouse.style.zIndex = '';
+
+    // cheeseBackgroundを表示に戻す
+    const cheeseBackground = document.getElementById('cheeseBackground');
+    cheeseBackground.style.display = 'block';
+
+    document.body.style.overflow = ''; // スクロールを有効化
+    // ゲームの終了処理
+});
+//---------------------------------------------------------------
+
 // 画像の読み込み
 const images = {};
 
@@ -32,9 +112,9 @@ function loadImages(callback) {
 
 // ゲームの状態
 let game = {
-    player: { x: 25, y: 10, direction: 'right', imageKey: 'mouseRight', score: 0, moving: false }, // プレイヤーの初期位置、画像キー、得点、移動状態を調整
+    player: { x: 25, y: 10, direction: 'right', imageKey: 'mouseRight', score: 0, moving: false, lives: 3 }, // プレイヤーの初期位置、画像キー、得点、移動状態、残基を設定
     cheese: [], // チーズの位置を空の配列で初期化
-    cat: { x: 10, y: 4, direction: 'left', imageKey: 'catRight', moving: false }, // 猫の位置、画像キー、移動状態を調整
+    cat: { x: 10, y: 4, prevX: 0, prevY: 0, direction: 'left', imageKey: 'catRight', moving: false }, // 猫の位置、前の位置、画像キー、移動状態を調整
     maze: generateMaze(54, 22), // 迷路のサイズを縦21×横51に変更
     cheeseImage: null // チーズのImageオブジェクトを格納するためのプロパティを追加
 };
@@ -44,10 +124,7 @@ const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 canvas.width = game.maze[0].length * 20; // キャンバスの幅を迷路の幅に合わせて調整
 canvas.height = game.maze.length * 20; // キャンバスの高さを迷路の高さに合わせて調整
-canvas.style.position = 'absolute';
-canvas.style.left = '50%';
-canvas.style.top = '50%';
-canvas.style.transform = 'translate(-50%, -50%)';
+document.getElementById('game-wrapper').style.width = `${canvas.width}px`;
 ctx.fillStyle = 'yellow'; // 背景色を黄色に変更
 ctx.fillRect(0, 0, canvas.width, canvas.height); // キャンバス全体を黄色で塗りつぶす
 
@@ -233,41 +310,9 @@ function generateMaze(width, height) {
     return maze;
 }
 
-document.getElementById('mouse-wrapper').addEventListener('click', function () {
-    const packmouse = document.getElementById('packmouse');
-    packmouse.style.display = 'block'; // ブロック表示に変更
-    packmouse.style.position = 'fixed';
-    packmouse.style.left = '50%';
-    packmouse.style.top = '50%';
-    packmouse.style.transform = 'translate(-50%, -50%) scale(0)';
-    packmouse.style.width = '200vw';
-    packmouse.style.height = '200vh';
-    packmouse.style.borderRadius = '50%';
-    packmouse.style.backgroundColor = 'White';
-    packmouse.style.transition = 'transform 0.5s ease-in-out';
-    packmouse.style.zIndex = '9999'; // 一番上に表示されるようにz-indexを設定
-
-    // cheeseBackgroundを非表示に変更
-    const cheeseBackground = document.getElementById('cheeseBackground');
-    cheeseBackground.style.display = 'none';
-
-    setTimeout(() => {
-        packmouse.style.transform = 'translate(-50%, -50%) scale(1)';
-    }, 10);
-
-    setTimeout(() => {
-        packmouse.style.width = '100vw';
-        packmouse.style.height = '100vh';
-        packmouse.style.transition = 'transform 0.5s ease-in-out, borderRadius 0.5s ease-in-out'; // borderRadiusのアニメーションを修正
-        packmouse.style.borderRadius = '0%';
-        document.body.style.overflow = 'hidden'; // スクロールを無効化
-        window.scrollTo(0, 0); // スクロール位置をトップにリセット
-        // ゲームの開始
-        initGame();
-    }, 510); // transformのアニメーション時間徫実行
-});
 
 // -------------------------------------------------------------
+
 
 var cheese = document.getElementById('cheese-wrapper');
 var lottiePlayer = cheese.querySelector('lottie-player');
@@ -305,6 +350,9 @@ function checkCatMazeCollision(x, y) {
         if (catPosition === 1) {
             console.log("猫が壁にぶつかりました。"); // ログを流す
             return true; // 衝突した場合はtrueを返す
+        } else if (x === game.cat.prevX && y === game.cat.prevY) {
+            console.log("猫が以前の位置に戻ろうとしました。"); // ログを流す
+            return true; // 以前の位置に戻ろうとした場合はtrueを返す
         }
     } else {
         console.log("猫が迷路の範囲外に移動しようとしました。"); // ログを流す
@@ -407,18 +455,22 @@ function updateGame() {
 
             // X軸とY軸のどちらに移動するかを決定するための優先度を再評価し、迂回ルートを計算
             let priority = Math.abs(directionX) > Math.abs(directionY) ? ['x', 'y'] : ['y', 'x'];
-
             let moved = false;
+
+            // DirectionX! == 0の条件により、DirectionXが0の時、座標が移動せずにmovedがtrueになってしまう問題の修正
             for (let i = 0; i < priority.length && !moved; i++) {
-                if (priority[i] === 'x') {
+                if (priority[i] === 'x' && directionX !== 0) { // directionXが0でない場合のみX軸に移動を試みる
                     newX = game.cat.x + Math.sign(directionX);
                     if (!checkCatMazeCollision(newX, game.cat.y)) {
+                        console.log("x方向に移動")
+                        game.cat.prevX = game.cat.x; // 以前のX座標を保存
                         game.cat.x = newX; // X座標を更新
                         moved = true;
                     }
-                } else if (priority[i] === 'y') {
+                } else if (priority[i] === 'y' && directionY !== 0) { // directionYが0でない場合のみY軸に移動を試みる
                     newY = game.cat.y + Math.sign(directionY);
                     if (!checkCatMazeCollision(game.cat.x, newY)) {
+                        game.cat.prevY = game.cat.y; // 以前のY座標を保存
                         game.cat.y = newY; // Y座標を更新
                         moved = true;
                     }
@@ -428,19 +480,37 @@ function updateGame() {
             // 移動できなかった場合、迂回ルートを計算
             if (!moved) {
                 // 迂回ルートの計算
-                let alternativeRoutes = [
-                    { x: game.cat.x + 1, y: game.cat.y },
-                    { x: game.cat.x - 1, y: game.cat.y },
-                    { x: game.cat.x, y: game.cat.y + 1 },
-                    { x: game.cat.x, y: game.cat.y - 1 }
-                ];
-                for (let route of alternativeRoutes) {
-                    if (!checkCatMazeCollision(route.x, route.y)) {
-                        game.cat.x = route.x;
-                        game.cat.y = route.y;
-                        moved = true;
-                        break;
-                    }
+                let alternativeRoutes = [];
+                if (priority[0] === 'x') {
+                    // Xが優先の場合、Y軸方向の道を先に探索
+                    alternativeRoutes = [
+                        { x: game.cat.x, y: game.cat.y + 1 },
+                        { x: game.cat.x, y: game.cat.y - 1 },
+                        { x: game.cat.x + 1, y: game.cat.y },
+                        { x: game.cat.x - 1, y: game.cat.y }
+                    ];
+                } else {
+                    // Yが優先の場合、X軸方向の道を先に探索
+                    alternativeRoutes = [
+                        { x: game.cat.x + 1, y: game.cat.y },
+                        { x: game.cat.x - 1, y: game.cat.y },
+                        { x: game.cat.x, y: game.cat.y + 1 },
+                        { x: game.cat.x, y: game.cat.y - 1 }
+                    ];
+                }
+
+                // alternativeRoutesの各ルートについて、猫が迷路の壁に衝突しないかをチェック
+                alternativeRoutes = alternativeRoutes.filter(route =>
+                    !checkCatMazeCollision(route.x, route.y) &&
+                    !(route.x === game.cat.prevX && route.y === game.cat.prevY) // 過去の座標を避ける
+                );
+                if (alternativeRoutes.length > 0) {
+                    let selectedRoute = alternativeRoutes[0]; // 最初の有効なルートを選択
+                    game.cat.prevX = game.cat.x; // 以前のX座標を保存
+                    game.cat.prevY = game.cat.y; // 以前のY座標を保存
+                    game.cat.x = selectedRoute.x;
+                    game.cat.y = selectedRoute.y;
+                    moved = true;
                 }
             }
 
@@ -465,9 +535,10 @@ function updateGame() {
         // ゲームを再読み込み
         initGame();
     }
+    
 
     // すべてのチーズを集めたかの判定
-    if (game.cheese.length === 0) {
+    if (game.cheese.length === 0 && gamePlaying === false) {
         alert("You Win!");
         // 勝利時の処理
     }
@@ -501,12 +572,18 @@ function drawGame() {
     // 猫の描画
     const catImage = images[game.cat.imageKey]; // 画像キーを使用してImageオブジェクトを取得
     ctx.drawImage(catImage, game.cat.x * 20, game.cat.y * 20, 20, 20);
+
+    // スコアを表示する
+    document.getElementById('scoreDisplay').innerHTML = 'SCORE: ' + game.player.score;
 }
 
 
 // ゲームの更新と描画
+
 function gameLoop() {
-    updateGame();
-    drawGame();
-    requestAnimationFrame(gameLoop);
+    if (gamePlaying === true) {
+        updateGame();
+        drawGame();
+        requestAnimationFrame(gameLoop);
+    }
 }
