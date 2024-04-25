@@ -122,15 +122,19 @@ let game = {
         { x: 40, y: 20, prevX: 0, prevY: 0, direction: 'left', imageKey: 'catLeft', moving: false }, 
         { x: 50, y: 15, prevX: 0, prevY: 0, direction: 'right', imageKey: 'catLeft', moving: false }, 
     ],
-    maze: generateMaze(54, 22),
+    maze: generateMaze(50, 18),
     cheeseImage: null
 };
 
 // キャンバスとコンテキストの取得
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
-canvas.width = game.maze[0].length * 20; // キャンバスの幅を迷路の幅に合わせて調整
-canvas.height = game.maze.length * 20; // キャンバスの高さを迷路の高さに合わせて調整
+
+// 迷路の1マスの幅と高さを定義
+const tileSize = 25;
+
+canvas.width = game.maze[0].length * tileSize; // キャンバスの幅を迷路の幅に合わせて調整
+canvas.height = game.maze.length * tileSize; // キャンバスの高さを迷路の高さに合わせて調整
 document.getElementById('game-wrapper').style.width = `${canvas.width}px`;
 ctx.fillStyle = 'yellow'; // 背景色を黄色に変更
 ctx.fillRect(0, 0, canvas.width, canvas.height); // キャンバス全体を黄色で塗りつぶす
@@ -176,140 +180,140 @@ function generateMaze(width, height) {
     }
 
     // C------------------------------------------------
-    // x6,y6からx7,y15まで壁に変更
-    for (let y = 6; y <= 15; y++) {
-        maze[y][6] = 1;
-        maze[y][7] = 1;
+    // x4,y4からx5,y13まで壁に変更
+    for (let y = 4; y <= 13; y++) {
+        maze[y][4] = 1;
+        maze[y][5] = 1;
     }
-    // x8,y6からx13,y7まで壁に変更
-    for (let x = 8; x <= 13; x++) {
-        maze[6][x] = 1;
-        maze[7][x] = 1;
+    // x6,y4からx11,y5まで壁に変更
+    for (let x = 6; x <= 11; x++) {
+        maze[4][x] = 1;
+        maze[5][x] = 1;
     }
-    // x8,y13からx13,y15まで壁に変更
-    for (let y = 13; y <= 15; y++) {
-        for (let x = 8; x <= 13; x++) {
+    // x6,y11からx11,y13まで壁に変更
+    for (let y = 11; y <= 13; y++) {
+        for (let x = 6; x <= 11; x++) {
             maze[y][x] = 1;
         }
     }
-    // x15,y6からx17,y15まで壁に変更
-    for (let y = 6; y <= 15; y++) {
-        for (let x = 15; x <= 17; x++) {
+    // x13,y4からx15,y13まで壁に変更
+    for (let y = 4; y <= 13; y++) {
+        for (let x = 13; x <= 15; x++) {
             maze[y][x] = 1;
         }
     }
-    // x18,y9からx20,y10まで壁に変更
-    for (let y = 9; y <= 10; y++) {
-        for (let x = 18; x <= 20; x++) {
+    // x16,y7からx18,y8まで壁に変更
+    for (let y = 7; y <= 8; y++) {
+        for (let x = 16; x <= 18; x++) {
             maze[y][x] = 1;
         }
     }
-    // x19,y11からx20,y15まで壁に変更
-    for (let y = 11; y <= 15; y++) {
-        for (let x = 19; x <= 20; x++) {
+    // x17,y9からx18,y13まで壁に変更
+    for (let y = 9; y <= 13; y++) {
+        for (let x = 17; x <= 18; x++) {
             maze[y][x] = 1;
         }
     }
 
-    // x22,y9からx23,y15まで壁に変更
-    for (let y = 9; y <= 15; y++) {
-        for (let x = 22; x <= 23; x++) {
+    // x20,y7からx21,y13まで壁に変更
+    for (let y = 7; y <= 13; y++) {
+        for (let x = 20; x <= 21; x++) {
             maze[y][x] = 1;
         }
     }
-    // x24,y9からx27,y9まで壁に変更
-    for (let x = 24; x <= 27; x++) {
-        maze[9][x] = 1;
+    // x22,y7からx25,y7まで壁に変更
+    for (let x = 22; x <= 25; x++) {
+        maze[7][x] = 1;
     }
-    // x24,y11からx27,y12まで壁に変更
-    for (let y = 11; y <= 12; y++) {
-        for (let x = 24; x <= 27; x++) {
+    // x22,y9からx25,y10まで壁に変更
+    for (let y = 9; y <= 10; y++) {
+        for (let x = 22; x <= 25; x++) {
             maze[y][x] = 1;
         }
     }
-    // x24,y14からx27,y15まで壁に変更
-    for (let y = 14; y <= 15; y++) {
-        for (let x = 24; x <= 27; x++) {
+    // x22,y12からx25,y13まで壁に変更
+    for (let y = 12; y <= 13; y++) {
+        for (let x = 22; x <= 25; x++) {
             maze[y][x] = 1;
         }
     }
 
     // E------------------------------------------------
-    // x29,y9からx30,y15まで壁に変更
-    for (let y = 9; y <= 15; y++) {
-        for (let x = 29; x <= 30; x++) {
+    // x27,y7からx28,y13まで壁に変更
+    for (let y = 7; y <= 13; y++) {
+        for (let x = 27; x <= 28; x++) {
             maze[y][x] = 1;
         }
     }
-    // x31,y9からx34,y9まで壁に変更
-    for (let x = 31; x <= 34; x++) {
-        maze[9][x] = 1;
+    // x29,y7からx32,y7まで壁に変更
+    for (let x = 29; x <= 32; x++) {
+        maze[7][x] = 1;
     }
-    // x31,y11からx34,y12まで壁に変更
-    for (let y = 11; y <= 12; y++) {
-        for (let x = 31; x <= 34; x++) {
+    // x29,y9からx32,y10まで壁に変更
+    for (let y = 9; y <= 10; y++) {
+        for (let x = 29; x <= 32; x++) {
             maze[y][x] = 1;
         }
     }
-    // x31,y14からx34,y15まで壁に変更
-    for (let y = 14; y <= 15; y++) {
-        for (let x = 31; x <= 34; x++) {
+    // x29,y12からx32,y13まで壁に変更
+    for (let y = 12; y <= 13; y++) {
+        for (let x = 29; x <= 32; x++) {
             maze[y][x] = 1;
         }
     }
 
     // S------------------------------------------------
-    // x36,y9からx37,y12まで壁に変更
-    for (let y = 9; y <= 12; y++) {
-        for (let x = 36; x <= 37; x++) {
+    // x34,y7からx35,y10まで壁に変更
+    for (let y = 7; y <= 10; y++) {
+        for (let x = 34; x <= 35; x++) {
             maze[y][x] = 1;
         }
     }
 
-    // x38,y9からx40,y9まで壁に変更
-    for (let x = 38; x <= 40; x++) {
-        maze[9][x] = 1;
+    // x36,y7からx38,y7まで壁に変更
+    for (let x = 36; x <= 38; x++) {
+        maze[7][x] = 1;
     }
 
-    // x38,y11からx40,y12まで壁に変更
-    for (let y = 11; y <= 12; y++) {
-        for (let x = 38; x <= 40; x++) {
+    // x36,y9からx38,y10まで壁に変更
+    for (let y = 9; y <= 10; y++) {
+        for (let x = 36; x <= 38; x++) {
             maze[y][x] = 1;
         }
     }
 
-    // x36,y14からx40,y15まで壁に変更
-    for (let y = 14; y <= 15; y++) {
-        for (let x = 36; x <= 40; x++) {
+    // x34,y12からx38,y13まで壁に変更
+    for (let y = 12; y <= 13; y++) {
+        for (let x = 34; x <= 38; x++) {
             maze[y][x] = 1;
         }
     }
 
-    // x39,y13からx40,y13まで壁に変更
-    for (let x = 39; x <= 40; x++) {
-        maze[13][x] = 1;
+    // x37,y11からx38,y11まで壁に変更
+    for (let x = 37; x <= 38; x++) {
+        maze[11][x] = 1;
     }
 
     // E------------------------------------------------
-    // x42,y9からx43,y15まで壁に変更
-    for (let y = 9; y <= 15; y++) {
-        for (let x = 42; x <= 43; x++) {
+    // x40,y7からx41,y13まで壁に変更
+    for (let y = 7; y <= 13; y++) {
+        for (let x = 40; x <= 41; x++) {
             maze[y][x] = 1;
         }
     }
-    // x44,y9からx47,y9まで壁に変更
-    for (let x = 44; x <= 47; x++) {
-        maze[9][x] = 1;
+    // x42,y7からx45,y7まで壁に変更
+    for (let x = 42; x <= 45; x++) {
+        maze[7][x] = 1;
     }
-    // x44,y11からx47,y12まで壁に変更
-    for (let y = 11; y <= 12; y++) {
-        for (let x = 44; x <= 47; x++) {
+    // x42,y9からx45,y10まで壁に変更
+    for (let y = 9; y <= 10; y++) {
+        for (let x = 42; x <= 45; x++) {
             maze[y][x] = 1;
         }
     }
-    // x44,y14からx47,y15まで壁に変更
-    for (let y = 14; y <= 15; y++) {
-        for (let x = 44; x <= 47; x++) {
+    // x42,y12からx45,y13まで壁に変更
+    for (let y = 12; y <= 13; y++) {
+        for (let x = 42; x <= 45; x++) {
             maze[y][x] = 1;
         }
     }
@@ -321,7 +325,6 @@ function generateMaze(width, height) {
 
 
 // -------------------------------------------------------------
-
 // 迷路との衝突判定関数を修正
 function checkMazeCollision(x, y) {
     // プレイヤーの新しい位置が迷路の範囲内にあるか確認
@@ -495,13 +498,16 @@ function updateGame() {
 }
 function playLivesDecreaseAnimation() {
     if (game.player.lives === 2) {
-        document.getElementById('lives3').src = 'img/dotherat.gif';
+        const imgElement = document.getElementById('lives3');
+        imgElement.src = 'img/dotheart.gif';
     }
     if (game.player.lives === 1) {
-        document.getElementById('lives2').src = 'img/dotherat.gif';
+        const imgElement = document.getElementById('lives2');
+        imgElement.src = 'img/dotheart.gif';
     }
     if (game.player.lives === 0) {
-        document.getElementById('lives1').src = 'img/dotherat.gif';
+        const imgElement = document.getElementById('lives1');
+        imgElement.src = 'img/dotheart.gif';
     }
 }
 
@@ -609,7 +615,7 @@ function drawCats() {
                 break;
         }
         const catImage = images[imageKey];
-        ctx.drawImage(catImage, cat.x * 20, cat.y * 20, 20, 20);
+        ctx.drawImage(catImage, cat.x * tileSize, cat.y * tileSize, tileSize, tileSize);
     });
 }
 
@@ -623,7 +629,7 @@ function drawGame() {
         for (let x = 0; x < game.maze[y].length; x++) {
             if (game.maze[y][x] === 1) {
                 ctx.fillStyle = 'black';
-                ctx.fillRect(x * 20, y * 20, 20, 20);
+                ctx.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
             }
         }
     }
@@ -631,12 +637,12 @@ function drawGame() {
     // チーズの描画の最適化
     game.cheese.forEach(function (cheese) {
         // 再利用可能なチーズのImageオブジェクトを使用
-        ctx.drawImage(game.cheeseImage, cheese.x * 20 + 5, cheese.y * 20 + 5, 10, 10);
+        ctx.drawImage(game.cheeseImage, cheese.x * tileSize + 5, cheese.y * tileSize + 5, 10, 10);
     });
 
     // プレイヤーの描画
     const playerImage = images[game.player.imageKey]; // 画像キーを使用してImageオブジェクトを取得
-    ctx.drawImage(playerImage, game.player.x * 20, game.player.y * 20, 20, 20);
+    ctx.drawImage(playerImage, game.player.x * tileSize, game.player.y * tileSize, tileSize, tileSize);
 
     // 猫の描画を更新
     drawCats();
