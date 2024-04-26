@@ -6,15 +6,15 @@ let soundEnabled = true; // ゲームの音の初期状態を設定
 document.getElementById('soundtoggle').addEventListener('click', function () {
     soundEnabled = !soundEnabled; // 音の状態を切り替え
     if (soundEnabled) {
-        document.getElementById('soundtoggle').style.backgroundImage = 'url("img/soundON.jpg")'; // 音がONの時の画像
+        document.getElementById('soundtoggle').style.backgroundImage = 'url("../img/soundON.jpg")'; // 音がONの時の画像
         // 音を有効にする処理
     } else {
-        document.getElementById('soundtoggle').style.backgroundImage = 'url("img/soundOff.jpg")'; // 音がOFFの時の画像
+        document.getElementById('soundtoggle').style.backgroundImage = 'url("../img/soundOff.jpg")'; // 音がOFFの時の画像
         // 音を無効にする処理
     }
 });
 
-let audioPlayer = new Audio('sound/EscapeTheChase.mp3');
+let audioPlayer = new Audio('../sound/EscapeTheChase.mp3');
 
 document.getElementById('mouse-wrapper').addEventListener('click', function () {
     gamePlaying = true;

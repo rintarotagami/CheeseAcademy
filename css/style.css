@@ -389,11 +389,12 @@ footer {
 }
 
 #soundtoggle{
-    background-image: url("./img/soundOn.jpg");
+    background-image: url("../img/soundOn.jpg");
     background-size: cover;
     width: 50px;
     height: 100%;
 }
+
 #packmouse .container{
     width: 90%;
 }
@@ -408,3 +409,5 @@ footer {
 #lifeDisplay div img{
     width: 3rem;
 }
+
+
