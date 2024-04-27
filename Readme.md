@@ -28,10 +28,10 @@ sequenceDiagram
     Note over G: スクロールを有効化
 
 
-drawGameが毎フレーム読みこまれていて、処理が重くなってしまっている。
+%% drawGameが毎フレーム読みこまれていて、処理が重くなってしまっている。
 
-【修正案】
-updateという変数をgameloopの外でも機能するようにし、
-title,scoreDisplay,howtoplayの時は、
-プレイヤーの操作が行われたら、updateをtrueにする。
-updateがtrueの時は、drawGameを実行するように修正します。
+%% 【修正案】
+%% updateという変数をgameloopの外でも機能するようにし、
+%% title,scoreDisplay,howtoplayの時は、
+%% プレイヤーの操作が行われたら、updateをtrueにする。
+%% updateがtrueの時は、drawGameを実行するように修正します。
