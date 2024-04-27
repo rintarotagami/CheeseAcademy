@@ -237,7 +237,11 @@ function handleKeyDown(event) {
     if (game.state === 'scoreScreen') {
         if (event.key.toLowerCase() === ' ' && game.selection === 'back') { // キーの大文字小文字を区別しない
             document.querySelectorAll('audio').forEach(audio => audio.pause());
-            game.state = 'title';
+            game.maze = generateMaze(50, 18);
+            document.getElementById('lives1').src = 'img/dotheart.png';
+            document.getElementById('lives2').src = 'img/dotheart.png';
+            document.getElementById('lives3').src = 'img/dotheart.png';
+<br />            game.state = 'title';
             game.selection = 'start';
         }
     }
