@@ -354,12 +354,36 @@ footer {
 }
 
 #gameCanvas-wrapper{
+    position: relative;
     display: flex;
     justify-content: center;
+    align-items: center;
     width: 100%;
     height: fit-content;
 }
 
+#gameRight{
+    position: absolute;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    top: 0;
+    right: 0;
+    width: 50%;
+    height: 100%;
+}
+
+#gameLeft{
+    position: absolute;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    width: 50%;
+    height: 80%;
+}
 
 
 #closeButton{
@@ -390,7 +414,9 @@ footer {
 
 #soundtoggle{
     background-image: url("../img/soundOn.jpg");
-    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
     width: 50px;
     height: 100%;
 }

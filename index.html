@@ -226,7 +226,11 @@
                 <div id="scoreDisplay"></div>
                 <div id="soundtoggle"></div>
             </div>
-            <div id="gameCanvas-wrapper"><canvas id="gameCanvas" width="800" height="600"></canvas></div>
+            <div id="gameCanvas-wrapper">
+                <div id="gameRight"></div>
+                <div id="gameLeft"></div>
+                <canvas id="gameCanvas" width="800" height="600"></canvas>
+            </div>
             <div id="lifeDisplay">
                 <div><img src="img/dotheart.png" id="lives1" loop="false" alt=""></div>
                 <div><img src="img/dotheart.png" id="lives2" loop="false" alt=""></div>
@@ -251,7 +255,7 @@
     <script src="https://unpkg.com/three@0.147.0/examples/js/controls/OrbitControls.js"></script>
     <script src="https://unpkg.com/three@0.142.0/examples/js/loaders/GLTFLoader.js"></script>
     <script src="./js/index.js"></script>
-    <script src="./js/packmouse.js"></script>
+    <script type="module" src="./js/packmouse.js"></script>
 </body>
 
 </html>
