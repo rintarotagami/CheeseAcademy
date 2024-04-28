@@ -28,7 +28,7 @@ function loadImages(callback) {
         mouseLeft: '../svg/mouseLeft.svg',
         mouseRight: '../svg/mouseRight.svg',
         cheese: '../svg/cheese.svg',
-        mouseDead: '../svg/mouseDead.svg',
+        mouseDead: '../img/mouseDead.png',
         title: '../img/packmouseTitle.png',
         heart: '../svg/emote/heart.svg',
     };
@@ -237,11 +237,14 @@ function handleKeyDown(event) {
     if (game.state === 'scoreScreen') {
         if (event.key.toLowerCase() === ' ' && game.selection === 'back') { // キーの大文字小文字を区別しない
             document.querySelectorAll('audio').forEach(audio => audio.pause());
+            document.querySelectorAll('audio').forEach(audio => {
+                audio.currentTime = 0;
+            });
             game.maze = generateMaze(50, 18);
             document.getElementById('lives1').src = 'img/dotheart.png';
             document.getElementById('lives2').src = 'img/dotheart.png';
             document.getElementById('lives3').src = 'img/dotheart.png';
-<br />            game.state = 'title';
+            game.state = 'title';
             game.selection = 'start';
         }
     }
@@ -381,6 +384,9 @@ function handleGameOver() {
             game.state = 'gameover';
             setTimeout(() => {
                 document.querySelectorAll('audio').forEach(audio => audio.pause());
+                document.querySelectorAll('audio').forEach(audio => {
+                    audio.currentTime = 0;
+                });
                 game.state = 'scoreScreen';
                 setTimeout(() => {
                     game.selection = 'back';
@@ -540,20 +546,20 @@ function drawGame() {
         case 'gameover':
             document.getElementById('gameLeft').style.backgroundImage = "";
             // ゲームオーバー画面の描画
-            ctx.font = '55px DotGothic16';
+            ctx.font = '70px DotGothic16';
             ctx.fillStyle = 'black';
             const text = 'Had cheese!';
             const textWidth = ctx.measureText(text).width;
-            const textX = canvas.width / 2 - textWidth / 2;
-            const textY = canvas.height / 2 - 60; // テキストのY座標を調整
+            const textX = canvas.width / 2 - textWidth / 2 + 120; // テキストを右にずらして配置
+            const textY = canvas.height / 2 + 20; // テキストのY座標を中央に設定
 
             const mouseDeadImage = images['mouseDead'];
-            const imageX = canvas.width / 2 - mouseDeadImage.width / 2;
-            const imageY = canvas.height / 2; // 画像のY座標を調整
+            const imageX = canvas.width / 5; // 画像を右側中央に配置
+            const imageY = canvas.height / 2 - 125; // 画像のY座標を中央に設定
 
-            // テキストと画像を中央に配置
+            // テキストと画像を右にずらして配置
             ctx.fillText(text, textX, textY);
-            ctx.drawImage(mouseDeadImage, imageX, imageY, mouseDeadImage.width, mouseDeadImage.height);
+            ctx.drawImage(mouseDeadImage, imageX, imageY, 250, 250); // 画像のY座標を修正して中央に配置
             break;
 
 
