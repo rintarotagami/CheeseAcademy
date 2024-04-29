@@ -14,10 +14,14 @@ createAndAppendAudio('cursorSound', '../sound/cursor_1.mp3');
 createAndAppendAudio('araraSound', '../sound/arara.mp3');
 createAndAppendAudio('poisonSound', '../sound/poison.mp3');
 createAndAppendAudio('blokenSound', '../sound/bloken.mp3');
-createAndAppendAudio('victorySound', 'sound/victory.mp3');
+createAndAppendAudio('victorySound', '../sound/victory.mp3');
+createAndAppendAudio('rainbowSound', '../sound/rainbow.mp3');
 
 
-
+// rainbowSoundとblokenSoundの音量を80%に設定
+rainbowSound.volume = 0.3;
+blokenSound.volume = 0.5;
+poisonSound.volume = 0.5;
 
 //---------------------------------------------------------------------
 let soundEnabled = true; // ゲームの音の初期状態を設定

@@ -34,7 +34,7 @@ function loadImages(callback) {
         heart: '../svg/emote/heart.svg',
         cheeseWall: '../img/cheeseWall.png',
         rainbowCheese: '../img/rainbowCheese.gif',
-        posionCheese: '../img/posionCheese.png',
+        poisonCheese: '../img/poisonCheese.png',
         controller: '../img/controller.png',
     };
 
@@ -69,11 +69,11 @@ let game = {
     maze: generateMaze(52, 18),
 
     cheese: [],
-    posionCheese: [],
+    poisonCheese: [],
     bigCheese: [],
     rainbowCheese: [],
     cheeseImage: null,
-    posionCheeseImage: null,
+    poisonCheeseImage: null,
     scoreHistory: JSON.parse(localStorage.getItem('scoreHistory') || '[]') // スコア履歴をキャッシュから読み込む
 };
 
@@ -102,7 +102,7 @@ export function initGame() {
     updated = true;
     loadImages(() => {
         game.cheeseImage = images.cheese; // チーズの画像を設定
-        game.posionCheeseImage = images.posionCheese;
+        game.poisonCheeseImage = images.poisonCheese;
         window.addEventListener('keydown', handleKeyDown);
         gameLoop();
     });
@@ -111,24 +111,34 @@ export function initGame() {
 // アイテムの生成-----------------------------------------------------------------------------------
 function generateItems(maze) {
     let cheesePositions = [];
-    let posionCheesePositions = [];
+    let poisonCheesePositions = [];
     let rainbowCheesePosition = [];
-    let posionCheeseCount = 0; // 毒チーズの数をカウント
+    let poisonCheeseCount = 0; // 毒チーズの数をカウント
+    let maxPoisonCheese = 3 * game.level; // 毒チーズの最大数
+    let line = 0;
+
+    // 迷路の各マスをチェック
     for (let y = 0; y < maze.length; y++) {
         for (let x = 0; x < maze[y].length; x++) {
-            if (maze[y][x] === 0) { // 壁がない場所を探す
-                if (x === 17 && y === 9 ) { // レインボーチーズの位置で5%の確率で出現
+            // 壁がない場所を探す
+            if (maze[y][x] === 0) {
+                // レインボーチーズの位置で5%の確率で出現
+                if (x === 17 && y === 9 ) {
                     rainbowCheesePosition.push({ x: x, y: y, image: images.rainbowCheese });
-                } else if (posionCheeseCount < 4 + Math.min(1, game.level - 1) && Math.random() < 0.01 + Math.min(0.1, game.level - 1) && posionCheeseCount < 10 && !(x === game.player.x && y === game.player.y)) { // 3%の確率でposionCheeseを生成し、毒チーズの数が3未満の場合のみ生成。プレイヤーの初期位置には毒チーズが沸かないようにする
-                    posionCheesePositions.push({ x: x, y: y, image: images.posionCheese });
-                    posionCheeseCount++; // 毒チーズの数をインクリメント
+                } else if (poisonCheeseCount < maxPoisonCheese && Math.random() < 0.03  && line < 0) {
+                    // 毒チーズの数が最大数未満で、かつ5%の確率で出現
+                    poisonCheesePositions.push({ x: x, y: y, image: images.poisonCheese });
+                    poisonCheeseCount++; // 毒チーズの数をインクリメント
+                    line = 32; // 10個先には生成されない
                 } else {
-                    cheesePositions.push({ x: x, y: y, image: images.cheese }); // 壁がない場所にチーズを配置
+                    // それ以外の場合はチーズを配置
+                    cheesePositions.push({ x: x, y: y, image: images.cheese });
                 }
             }
+            line--;
         }
     }
-    return { posionCheesePositions, cheesePositions, rainbowCheesePosition };
+    return { poisonCheesePositions, cheesePositions, rainbowCheesePosition };
 }
 
 
@@ -201,7 +211,7 @@ function handleKeyDown(event) {
                     playAudio.play();
                     Object.assign(game, {
                         level: 1,
-                        player: { x: 17, y: 10, direction: 'right', imageKey: 'mouseRight', score: 0, moving: false, lives: 3 }, //x: 27, y: 8
+                        player: { x: 27, y: 8, direction: 'right', imageKey: 'mouseRight', score: 0, moving: false, lives: 3 }, 
                         cheese: [],
                         cats: [ // 猫を配列で管理
                             { x: 10, y: 3, prevX: 0, prevY: 0, direction: 'left', imageKey: 'catRight', moving: false },
@@ -213,7 +223,7 @@ function handleKeyDown(event) {
 
                     const generatedItems = generateItems(game.maze);
                     game.cheese = generatedItems.cheesePositions;
-                    game.posionCheese = generatedItems.posionCheesePositions;
+                    game.poisonCheese = generatedItems.poisonCheesePositions;
                     game.rainbowCheese = generatedItems.rainbowCheesePosition;
                     updated = true;
 
@@ -269,7 +279,7 @@ function handleKeyDown(event) {
                 newImageKey = 'mouseRight';
                 break;
             case ' ':
-                // game.cheese = [game.cheese[0]];
+                // game.cheese = [];
                 break;
         }
         if (newDirection && newImageKey) {
@@ -336,12 +346,12 @@ function updateGame() {
     });
 
 
-    // プレイヤーがposionCheeseを取ったら、チーズの削除操作の反転
-    game.posionCheese = game.posionCheese.filter(posionCheese => {
-        if (posionCheeseEffectDuration > 0){
-
-        }else if (posionCheese.x === game.player.x && posionCheese.y === game.player.y) {
-            posionCheeseEffectDuration = 15; //playerの移動15回分。
+    // プレイヤーがpoisonCheeseを取ったら、チーズの削除操作の反転
+    game.poisonCheese = game.poisonCheese.filter(poisonCheese => {
+        if (poisonCheeseEffectDuration > 0){
+            return true; // この毒チーズを配列に残す
+        } else if (poisonCheese.x === game.player.x && poisonCheese.y === game.player.y) {
+            poisonCheeseEffectDuration = 15; //playerの移動15回分。
             return false; // この毒チーズを配列から削除
         }
         return true; // この毒チーズを配列に残す
@@ -351,6 +361,10 @@ function updateGame() {
     // プレイヤーがレインボーチーズと重なったかの判定と、レインボーチーズの削除、スコアの更新
     game.rainbowCheese = game.rainbowCheese.filter(rainbowCheese => {
         if (rainbowCheese.x === game.player.x && rainbowCheese.y === game.player.y) {
+            if (!rainbowSound.paused) {
+                rainbowSound.currentTime = 0;
+            }
+            rainbowSound.play();
             game.player.score += 3000; // スコアに3000点を追加
             powerupEffectDuration = 100;
             return false; // このレインボーチーズを配列から削除
@@ -371,7 +385,7 @@ function updateGame() {
             playLivesDecreaseAnimation();
             if (game.player.lives > 0 && game.state === 'playing') {
                 game.state = 'loading';
-                posionCheeseEffectDuration = 0;
+                poisonCheeseEffectDuration = 0;
 
                 const gameElement = document.getElementById('game');
                 gameElement.src = '../img/cheeseTransition.gif';
@@ -386,7 +400,7 @@ function updateGame() {
                             x: Math.floor(Math.random() * game.maze[0].length),
                             y: Math.floor(Math.random() * game.maze.length)
                         };
-                    } while (game.maze[newPosition.y][newPosition.x] !== 0 || game.posionCheese.some(posionCheese => posionCheese.x === newPosition.x && posionCheese.y === newPosition.y)); // 壁がない場所かつ毒チーズがない場所を探す
+                    } while (game.maze[newPosition.y][newPosition.x] !== 0 || game.poisonCheese.some(poisonCheese => poisonCheese.x === newPosition.x && poisonCheese.y === newPosition.y)); // 壁がない場所かつ毒チーズがない場所を探す
                     game.player.x = newPosition.x;
                     game.player.y = newPosition.y;
                     game.player.direction = 'right';
@@ -424,10 +438,12 @@ function updateGame() {
     if (game.state === 'playing' && game.cheese.length === 0) { // 勝利時の処理---------------------------------
         game.state = 'victory';
         powerupEffectDuration = 0;
+        poisonCheeseEffectDuration = 0;
         if (!victorySound.paused) {
             victorySound.currentTime = 0;
         }
         victorySound.play();
+        game.level++;
         setTimeout(() => {
             game.maze = generateMaze(52, 18);
             // プレイヤーと猫の位置を初期値に戻す
@@ -437,7 +453,7 @@ function updateGame() {
                     x: Math.floor(Math.random() * game.maze[0].length),
                     y: Math.floor(Math.random() * game.maze.length)
                 };
-            } while (game.maze[newPosition.y][newPosition.x] !== 0 || game.posionCheese.some(posionCheese => posionCheese.x === newPosition.x && posionCheese.y === newPosition.y)); // 壁がない場所かつ毒チーズがない場所を探す
+            } while (game.maze[newPosition.y][newPosition.x] !== 0 || game.poisonCheese.some(poisonCheese => poisonCheese.x === newPosition.x && poisonCheese.y === newPosition.y)); // 壁がない場所かつ毒チーズがない場所を探す
             game.player.x = newPosition.x;
             game.player.y = newPosition.y;
             game.player.direction = 'right';
@@ -447,7 +463,7 @@ function updateGame() {
 
             const generatedItems = generateItems(game.maze);
             game.cheese = generatedItems.cheesePositions;
-            game.posionCheese = generatedItems.posionCheesePositions;
+            game.poisonCheese = generatedItems.poisonCheesePositions;
             game.rainbowCheese = generatedItems.rainbowCheesePosition;
             updated = true;
 
@@ -455,6 +471,7 @@ function updateGame() {
                 { x: 20, y: 10, prevX: 0, prevY: 0, direction: 'left', imageKey: 'catRight', moving: false },
                 { x: 30, y: 15, prevX: 0, prevY: 0, direction: 'right', imageKey: 'catLeft', moving: false }
             );
+
             game.cats.forEach(cat => {
                 do {
                     newPosition = {
@@ -690,8 +707,8 @@ function drawGame() {
             });
 
             // 毒チーズの描画
-            game.posionCheese.forEach(function (posionCheese) {
-                ctx.drawImage(posionCheese.image, posionCheese.x * tileSize + 5, posionCheese.y * tileSize + 5, 10, 10);
+            game.poisonCheese.forEach(function (poisonCheese) {
+                ctx.drawImage(poisonCheese.image, poisonCheese.x * tileSize + 5, poisonCheese.y * tileSize + 5, 10, 10);
             });
 
             // レインボーチーズの描画
@@ -700,7 +717,7 @@ function drawGame() {
             });
             // プレイヤーの描画
             const playerImage = images[game.player.imageKey];
-            if (posionCheeseEffectDuration > 0) {
+            if (poisonCheeseEffectDuration > 0) {
                 ctx.filter = 'hue-rotate(180deg) saturate(300%)';
             }
             if (powerupEffectDuration > 0) {
@@ -800,7 +817,7 @@ function updatePlayer() {
                 }
                 break;
         }
-        if (posionCheeseEffectDuration > 0) {
+        if (poisonCheeseEffectDuration > 0) {
             if (poisonSound.paused) {
                 poisonSound.currentTime = 0;
             }
@@ -954,7 +971,7 @@ function updateCats() {
 // ゲームの更新と描画-------------------------------------------------------
 let playerMoveCounter = 0;
 let catMoveCounter = 0;
-let posionCheeseEffectDuration = 0; // 毒チーズの効果時間
+let poisonCheeseEffectDuration = 0; // 毒チーズの効果時間
 let powerupEffectDuration = 0; // パワーアップの効果時間
 
 
@@ -975,10 +992,9 @@ function gameLoop() {
             if (playerMoveCounter >= playerMoveInterval) {
                 updatePlayer(); // プレイヤーの位置を更新
                 playerMoveCounter = 0; // カウンターをリセット
-                posionCheeseEffectDuration--; // 毒チーズの効果時間
+                poisonCheeseEffectDuration--; // 毒チーズの効果時間
                 powerupEffectDuration--; // パワーアップの効果時間
                 updated = true; // 更新フラグをtrueに設定
-                console.log(game.player.condition);
             }
             if (catMoveCounter >= catMoveInterval) {
                 updateCats(); // 猫の位置を更新
