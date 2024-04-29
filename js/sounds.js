@@ -10,6 +10,14 @@ createAndAppendAudio('audioPlayer', '../sound/EscapeTheChase.mp3');
 createAndAppendAudio('wallAudio', '../sound/zubashu.mp3');
 createAndAppendAudio('toBeContinued', 'sound/toBeContinued.mp3');
 createAndAppendAudio('playAudio', '../sound/play.mp3');
+createAndAppendAudio('cursorSound', '../sound/cursor_1.mp3');
+createAndAppendAudio('araraSound', '../sound/arara.mp3');
+createAndAppendAudio('poisonSound', '../sound/poison.mp3');
+createAndAppendAudio('blokenSound', '../sound/bloken.mp3');
+createAndAppendAudio('victorySound', 'sound/victory.mp3');
+
+
+
 
 //---------------------------------------------------------------------
 let soundEnabled = true; // ゲームの音の初期状態を設定

@@ -133,6 +133,3 @@ window.addEventListener('scroll', function () {
         lottiePlayer.play();
     }
 });
-
-
-
