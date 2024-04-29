@@ -17,6 +17,7 @@ document.getElementById('mouse-wrapper').addEventListener('click', function () {
         packmouse.style.backgroundColor = 'White';
         packmouse.style.transition = 'transform 0.5s ease-in-out';
         packmouse.style.zIndex = '9999';
+        packmouse.style.overflow = 'auto'; //packmouse内のスクロールを有効化
 
         // cheeseBackgroundを非表示に変更
         const cheeseBackground = document.getElementById('cheeseBackground');
@@ -61,6 +62,8 @@ document.getElementById('closeButton').addEventListener('click', function () {
         cheeseBackground.style.display = 'block';
 
         document.body.style.overflow = ''; // スクロールを有効化
+        packmouse.style.overflow = 'hidden'; //packmouse内のスクロールを無効化
+
         // ゲームの終了処理
     }
 });

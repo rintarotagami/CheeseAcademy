@@ -7,7 +7,7 @@
     <title>CheeseAcademy</title>
     <link rel="stylesheet" href="css/destyle.css">
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/cheese.css">
+    <link rel="stylesheet" href="css/packmouse.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Rampart+One&display=swap" rel="stylesheet">
@@ -220,24 +220,84 @@
         </div>
     </section>
     <section id="packmouse">
-        <div id="game-wrapper" class="container">
-            <div id="closeButton"></div>
-            <div class="display-wrapper">
-                <div id="scoreDisplay"></div>
-                <div id="soundtoggle"></div>
+        <div class="container vcent">
+            <div id="game-wrapper">
+                <div id="closeButton"></div>
+                <div class="display-wrapper">
+                    <div id="scoreDisplay"></div>
+                    <div id="soundtoggle"></div>
+                </div>
+                <div id="gameCanvas-wrapper">
+                    <img id="game" src=" img/dummy.png">
+                    <div id="gameRight"></div>
+                    <div id="gameLeft"></div>
+                    <canvas id="gameCanvas" width="800" height="600"></canvas>
+                </div>
+                <div id="lifeDisplay">
+                    <div><img src="img/dotheart.png" id="lives1" loop="false" alt=""></div>
+                    <div><img src="img/dotheart.png" id="lives2" loop="false" alt=""></div>
+                    <div><img src="img/dotheart.png" id="lives3" loop="false" alt=""></div>
+                </div>
+                <div id="itemDisplay"></div>
+                <div id="achivement-wrapper">
+                    <div id="achivement">
+                        <h1>ACHIEVEMENT</h1>
+                        <p>0/10</p>
+                        <ul>
+                            <li>
+                                <img src="path_to_achievement_image" alt="実績1">
+                                <h2>実績内容の説明</h2>
+                                <p>達成回数: 0</p>
+                            </li>
+                            <li>
+                                <img src="path_to_achievement_image" alt="実績2">
+                                <h2>実績内容の説明</h2>
+                                <p>達成回数: 0</p>
+                            </li>
+                            <li>
+                                <img src="path_to_achievement_image" alt="実績3">
+                                <h2>実績内容の説明</h2>
+                                <p>達成回数: 0</p>
+                            </li>
+                            <li>
+                                <img src="path_to_achievement_image" alt="実績4">
+                                <h2>実績内容の説明</h2>
+                                <p>達成回数: 0</p>
+                            </li>
+                            <li>
+                                <img src="path_to_achievement_image" alt="実績5">
+                                <h2>実績内容の説明</h2>
+                                <p>達成回数: 0</p>
+                            </li>
+                            <li>
+                                <img src="path_to_achievement_image" alt="実績6">
+                                <h2>実績内容の説明</h2>
+                                <p>達成回数: 0</p>
+                            </li>
+                            <li>
+                                <img src="path_to_achievement_image" alt="実績7">
+                                <h2>実績内容の説明</h2>
+                                <p>達成回数: 0</p>
+                            </li>
+                            <li>
+                                <img src="path_to_achievement_image" alt="実績8">
+                                <h2>実績内容の説明</h2>
+                                <p>達成回数: 0</p>
+                            </li>
+                            <li>
+                                <img src="path_to_achievement_image" alt="実績9">
+                                <h2>実績内容の説明</h2>
+                                <p>達成回数: 0</p>
+                            </li>
+                            <li>
+                                <img src="path_to_achievement_image" alt="実績10">
+                                <h2>実績内容の説明</h2>
+                                <p>達成回数: 0</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
-            <div id="gameCanvas-wrapper">
-                <img id="game" src=" img/dummy.png">
-                <div id="gameRight"></div>
-                <div id="gameLeft"></div>
-                <canvas id="gameCanvas" width="800" height="600"></canvas>
-            </div>
-            <div id="lifeDisplay">
-                <div><img src="img/dotheart.png" id="lives1" loop="false" alt=""></div>
-                <div><img src="img/dotheart.png" id="lives2" loop="false" alt=""></div>
-                <div><img src="img/dotheart.png" id="lives3" loop="false" alt=""></div>
-            </div>
-            <div id="itemDisplay"></div>
         </div>
     </section>
 
