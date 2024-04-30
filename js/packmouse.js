@@ -131,7 +131,7 @@ function generateItems(maze) {
             // 壁がない場所を探す
             if (maze[y][x] === 0) {
                 // レインボーチーズの位置で5%の確率で出現
-                if (x === 17 && y === 9 ) {
+                if ((x === 17 && y === 9) || (x === 36 && y === 11)) {
                     rainbowCheesePosition.push({ x: x, y: y, image: images.rainbowCheese });
                 } else if (poisonCheeseCount < maxPoisonCheese && Math.random() < 0.03  && line < 0) {
                     // 毒チーズの数が最大数未満で、かつ5%の確率で出現
@@ -169,6 +169,7 @@ function checkMazeCollision(x, y) {
                         blokenSound.currentTime = 0;
                     }
                     blokenSound.play();
+                    game.player.score += 50; // スコアに50点を追加
                 }
             }
         }
@@ -379,7 +380,7 @@ function updateGame() {
             rainbowSound.play();
             achievements.rainbowCheeseCount += 1; // レインボーチーズのカウントを1増やす
             game.player.score += 3000; // スコアに3000点を追加
-            powerupEffectDuration = 100;
+            powerupEffectDuration = 40;
             return false; // このレインボーチーズを配列から削除
         }
         return true; // このレインボーチーズを配列に残す
@@ -1005,8 +1006,8 @@ let poisonCheeseEffectDuration = 0; // 毒チーズの効果時間
 let powerupEffectDuration = 0; // パワーアップの効果時間
 
 
-const playerMoveInterval = 40; // プレイヤーの移動間隔をフレーム単位で設定
-const catMoveInterval = 50; // 猫の移動間隔をフレーム単位で設定
+const playerMoveInterval = 20; // プレイヤーの移動間隔をフレーム単位で設定
+const catMoveInterval = 30; // 猫の移動間隔をフレーム単位で設定
 
 
 const UPDATE_LOAD_COEFF = 0.5;
