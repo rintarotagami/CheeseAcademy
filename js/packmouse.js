@@ -8,6 +8,13 @@ function appendScript(URL) {
 appendScript('js/sounds.js');
 appendScript('js/switchGameVisibility.js');
 appendScript('js/generateMaze.js');
+appendScript('js/achievement.js');
+
+import { achievements } from './achievement.js';
+console.log(achievements);
+
+import { updateAchievements } from './achievement.js';
+updateAchievements();
 
 
 import { generateMaze } from './GenerateMaze.js';
@@ -99,6 +106,7 @@ ctx.fillRect(0, 0, canvas.width, canvas.height); // キャンバス全体を黄�
 
 // ゲームの初期化---------------------------------------------------------------------------------
 export function initGame() {
+    updateAchievements();
     updated = true;
     loadImages(() => {
         game.cheeseImage = images.cheese; // チーズの画像を設定
@@ -209,6 +217,7 @@ function handleKeyDown(event) {
                         playAudio.currentTime = 0;
                     }
                     playAudio.play();
+                    achievements.playCount += 1;
                     Object.assign(game, {
                         level: 1,
                         player: { x: 27, y: 8, direction: 'right', imageKey: 'mouseRight', score: 0, moving: false, lives: 3 }, 
@@ -334,12 +343,14 @@ function updateGame() {
                 for (let j = -1; j <= 1; j++) {
                     if (cheese.x === game.player.x + j && cheese.y === game.player.y + i) {
                         game.player.score += 100; // スコアに100点を追加
+                        achievements.cheeseCount += 1; // チーズを取った回数を1増やす
                         return false; // このチーズを配列から削除
                     }
                 }
             }
         } else if (cheese.x === game.player.x && cheese.y === game.player.y) {
             game.player.score += 100; // スコアに100点を追加
+            achievements.cheeseCount += 1; // チーズを取った回数を1増やす
             return false; // このチーズを配列から削除
         }
         return true; // このチーズを配列に残す
@@ -352,6 +363,7 @@ function updateGame() {
             return true; // この毒チーズを配列に残す
         } else if (poisonCheese.x === game.player.x && poisonCheese.y === game.player.y) {
             poisonCheeseEffectDuration = 15; //playerの移動15回分。
+            achievements.poisonCheeseCount += 1; // 毒チーズを取った回数を1増やす
             return false; // この毒チーズを配列から削除
         }
         return true; // この毒チーズを配列に残す
@@ -365,6 +377,7 @@ function updateGame() {
                 rainbowSound.currentTime = 0;
             }
             rainbowSound.play();
+            achievements.rainbowCheeseCount += 1; // レインボーチーズのカウントを1増やす
             game.player.score += 3000; // スコアに3000点を追加
             powerupEffectDuration = 100;
             return false; // このレインボーチーズを配列から削除
@@ -379,6 +392,7 @@ function updateGame() {
         } else if (game.player.x === cat.x && game.player.y === cat.y) {
             // プレイヤーのライフを減らす
             game.player.lives -= 1;
+            achievements.caughtByCatCount += 1; // 猫に捕まった回数を1増やす
             // HPが減るアニメーションを再生
             araraSound.play();
 
@@ -444,6 +458,7 @@ function updateGame() {
         }
         victorySound.play();
         game.level++;
+        achievements.maxLevel += 1; // 最高レベルを1増やす
         setTimeout(() => {
             game.maze = generateMaze(52, 18);
             // プレイヤーと猫の位置を初期値に戻す
@@ -533,6 +548,10 @@ function handleGameOver() {
 
     localStorage.setItem('highScore', JSON.stringify(game.scoreHistory[0])); // 最高スコアをlocalStorageに保存
     saveScoreHistory(); //スコア履歴をキャッシュに保存
+
+    localStorage.setItem('achievements', JSON.stringify(achievements)); // 実績をlocalStorageに保存
+    updateAchievements();
+
     let row = 0;
 
     function dissolveWalls() {
@@ -625,7 +644,7 @@ function drawGame() {
             // ハイスコアの表示
             ctx.font = '30px DotGothic16';
             ctx.fillStyle = 'black';
-            let highScoreText = 'High Score: ' + localStorage.getItem('highScore');
+            let highScoreText = 'High Score: ' + (localStorage.getItem('highScore') || 0);
             let highScoreWidth = ctx.measureText(highScoreText).width;
             ctx.fillText(highScoreText, (canvas.width * 2 / 3) - (highScoreWidth / 2), canvas.height / 2 - 40);
 
@@ -751,6 +770,17 @@ function drawGame() {
             }
             const playerImageLoading = images[game.player.imageKey];
             ctx.drawImage(playerImageLoading, game.player.x * tileSize, game.player.y * tileSize, tileSize, tileSize);
+            break;
+        case 'victory':
+            ctx.font = '70px DotGothic16';
+            ctx.fillStyle = 'black';
+            const Winnertext = 'To the Next Level';
+            const WinnertextWidth = ctx.measureText(Winnertext).width;
+            const WinnertextX = canvas.width / 2 - WinnertextWidth / 2; // テキストを中央に配置
+            const WinnertextY = canvas.height / 2; // テキストのY座標を中央に設定
+
+            // テキストを中央に配置
+            ctx.fillText(text, textX, textY);
             break;
         case 'gameover':
             document.getElementById('gameLeft').style.backgroundImage = "";            // ゲームオーバー画面の描画
@@ -975,8 +1005,8 @@ let poisonCheeseEffectDuration = 0; // 毒チーズの効果時間
 let powerupEffectDuration = 0; // パワーアップの効果時間
 
 
-const playerMoveInterval = 50; // プレイヤーの移動間隔をフレーム単位で設定
-const catMoveInterval = 70; // 猫の移動間隔をフレーム単位で設定
+const playerMoveInterval = 40; // プレイヤーの移動間隔をフレーム単位で設定
+const catMoveInterval = 50; // 猫の移動間隔をフレーム単位で設定
 
 
 const UPDATE_LOAD_COEFF = 0.5;

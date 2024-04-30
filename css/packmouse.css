@@ -114,7 +114,7 @@
 
 /* ----------------------------------------------------------------- */
 
-#achivement-wrapper{
+#achievement-wrapper{
     width: 100%;
     height: 20rem;
     margin: 5rem 0;
@@ -123,19 +123,49 @@
     justify-content: space-between;
 }
 
-#achivement-wrapper h1{
-    font-size: 3rem;
+#achievement-wrapper h1{
+    font-size: 2rem;
 }
 
-#achivement{
+#achievement{
     width: 100%;
 }
 
-#achivement ul{
+#achievement > p{
+    text-align: left;
+}
+
+#achievement ul{
     display: flex;
     flex-direction: row;
 }
 
-#achivement li{
+#achievement li{
     width: 12.5%;
 }
+
+#achievement li img{
+    width: 100%;
+    height: auto;
+}
+
+#achievement li h2{
+    text-align: center;
+    font-family: DotGothic16;
+    font-size: 0.8rem;
+    border-bottom: 1px solid black;
+    text-shadow: 0 0 5px #807f78;
+    margin-bottom: 0.3rem;
+}
+
+#achievement li h3{
+    font-size: 0.7rem;
+    padding: 0.2rem 0;
+    margin: 0;
+}
+
+#achievement li p{
+    font-size: 0.5rem;
+}
+
+
