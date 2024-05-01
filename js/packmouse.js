@@ -94,8 +94,7 @@ function saveScoreHistory() {
 
 
 // 迷路のサイズ設定、迷路のサイズに合わせたキャンパス設定--------------------------------------------
-const tileSize = 25;// 迷路の1マスの幅と高さを定義
-
+let tileSize = window.innerWidth <= 768 ? 15 : 25; // スマホサイズの時はtileSizeを15に、それ以外は25に設定
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
@@ -139,7 +138,7 @@ function generateItems(maze) {
                 // レインボーチーズの位置で5%の確率で出現
                 if ((x === 17 && y === 9) || (x === 36 && y === 11)) {
                     rainbowCheesePosition.push({ x: x, y: y, image: images.rainbowCheese });
-                } else if (poisonCheeseCount < maxPoisonCheese && Math.random() < 0.03  && line < 0) {
+                } else if (poisonCheeseCount < maxPoisonCheese && Math.random() < 0.03 && line < 0) {
                     // 毒チーズの数が最大数未満で、かつ5%の確率で出現
                     poisonCheesePositions.push({ x: x, y: y, image: images.poisonCheese });
                     poisonCheeseCount++; // 毒チーズの数をインクリメント
@@ -201,6 +200,45 @@ function checkCatCatCollision(x, y, currentIndex) {
     return game.cats.some((otherCat, index) => index !== currentIndex && otherCat.x === x && otherCat.y === y);
 }
 
+function gameStart() {
+    game.state = 'playing';
+    window.gameState = game.state;
+    if (!playAudio.paused) {
+        playAudio.currentTime = 0;
+    }
+    playAudio.play();
+    achievements.playCount += 1;
+    Object.assign(game, {
+        level: 1,
+        player: { x: 27, y: 8, direction: 'right', imageKey: 'mouseRight', score: 0, moving: false, lives: 3 },
+        cheese: [],
+        cats: [ // 猫を配列で管理
+            { x: 10, y: 3, prevX: 0, prevY: 0, direction: 'left', imageKey: 'catRight', moving: false },
+            { x: 5, y: 14, prevX: 0, prevY: 0, direction: 'right', imageKey: 'catLeft', moving: false },
+            { x: 40, y: 14, prevX: 0, prevY: 0, direction: 'left', imageKey: 'catLeft', moving: false },
+        ],
+        maze: generateMaze(52, 18)
+    });
+
+    const generatedItems = generateItems(game.maze);
+    game.cheese = generatedItems.cheesePositions;
+    game.poisonCheese = generatedItems.poisonCheesePositions;
+    game.rainbowCheese = generatedItems.rainbowCheesePosition;
+    updated = true;
+}
+
+function howToPlayStart() {
+    if (!playAudio.paused) {
+        playAudio.currentTime = 0;
+    }
+    playAudio.play();
+    game.state = 'howToPlay';
+    updated = true;
+    setTimeout(() => {
+        game.selection = 'back';
+    }, 500);
+}
+
 //Playerの操作-----------------------------------------------------------------------
 function handleKeyDown(event) {
     event.preventDefault(); // デフォルトのキー機能を一時的に無効に
@@ -220,48 +258,17 @@ function handleKeyDown(event) {
             case ' ':
             case 'enter':
                 if (game.selection === 'start') {
-                    game.state = 'playing';
-                    window.gameState = game.state;
-                    if (!playAudio.paused) {
-                        playAudio.currentTime = 0;
-                    }
-                    playAudio.play();
-                    achievements.playCount += 1;
-                    Object.assign(game, {
-                        level: 1,
-                        player: { x: 27, y: 8, direction: 'right', imageKey: 'mouseRight', score: 0, moving: false, lives: 3 }, 
-                        cheese: [],
-                        cats: [ // 猫を配列で管理
-                            { x: 10, y: 3, prevX: 0, prevY: 0, direction: 'left', imageKey: 'catRight', moving: false },
-                            { x: 5, y: 14, prevX: 0, prevY: 0, direction: 'right', imageKey: 'catLeft', moving: false },
-                            { x: 40, y: 14, prevX: 0, prevY: 0, direction: 'left', imageKey: 'catLeft', moving: false },
-                        ],
-                        maze: generateMaze(52, 18)
-                    });
-
-                    const generatedItems = generateItems(game.maze);
-                    game.cheese = generatedItems.cheesePositions;
-                    game.poisonCheese = generatedItems.poisonCheesePositions;
-                    game.rainbowCheese = generatedItems.rainbowCheesePosition;
-                    updated = true;
+                    gameStart();
 
                 } else if (game.selection === 'howToPlay') {
-                    if (!playAudio.paused) {
-                        playAudio.currentTime = 0;
-                    }
-                    playAudio.play();
-                    game.state = 'howToPlay';
-                    updated = true;
-                    setTimeout(() => {
-                        game.selection = 'back';
-                    }, 500);
+                    howToPlayStart();
                 }
                 break;
         }
     }
 
     if (game.state === 'howToPlay') {
-        if (event.key.toLowerCase() === ' ' && game.selection === 'back') { // キーの大文字小文字を区別しない
+        if ((event.key.toLowerCase() === ' ' || event.key.toLowerCase() === 'enter') && game.selection === 'back') { // キーの大文字小文字を区別しない
             if (!playAudio.paused) {
                 playAudio.currentTime = 0;
             }
@@ -312,7 +319,7 @@ function handleKeyDown(event) {
     }
 
     if (game.state === 'scoreScreen') {
-        if (event.key.toLowerCase() === ' ' && game.selection === 'back') { // キーの大文字小文字を区別しない
+        if ((event.key.toLowerCase() === ' ' || event.key.toLowerCase() === 'enter') && game.selection === 'back') { // キーの大文字小文字を区別しない
             document.querySelectorAll('audio').forEach(audio => audio.pause());
             document.querySelectorAll('audio').forEach(audio => {
                 audio.currentTime = 0;
@@ -368,7 +375,7 @@ function updateGame() {
 
     // プレイヤーがpoisonCheeseを取ったら、チーズの削除操作の反転
     game.poisonCheese = game.poisonCheese.filter(poisonCheese => {
-        if (poisonCheeseEffectDuration > 0){
+        if (poisonCheeseEffectDuration > 0) {
             return true; // この毒チーズを配列に残す
         } else if (poisonCheese.x === game.player.x && poisonCheese.y === game.player.y) {
             poisonCheeseEffectDuration = 15; //playerの移動15回分。
@@ -651,21 +658,6 @@ function drawGame() {
             let highScoreWidth = ctx.measureText(highScoreText).width;
             ctx.fillText(highScoreText, (canvas.width * 2 / 3) - (highScoreWidth / 2), canvas.height / 2 - 40);
 
-            // スタートの表示
-            let startText = 'Start';
-            let startWidth = ctx.measureText(startText).width;
-            let startHeight = parseInt(ctx.font, 10); // フォントサイズを取得して整数に変換
-            ctx.fillStyle = 'black'; // テキストの色を設定
-            ctx.fillText(startText, (canvas.width * 2 / 3) - (startWidth / 2), canvas.height / 2 + (startHeight / 2));
-            ctx.fillText(game.selection === 'start' ? '>' : '', (canvas.width * 2 / 3) - (startWidth / 2) - 30, canvas.height / 2 + (startHeight / 2));
-
-            // プレイ方法の表示
-            let howToPlayText = 'How to Play';
-            let howToPlayWidth = ctx.measureText(howToPlayText).width;
-            let howToPlayHeight = parseInt(ctx.font, 10); // フォントサイズを取得して整数に変換
-            ctx.fillStyle = 'black'; // テキストの色を設定
-            ctx.fillText(howToPlayText, (canvas.width * 2 / 3) - (howToPlayWidth / 2), canvas.height / 2 + (howToPlayHeight / 2) + 40);
-            ctx.fillText(game.selection === 'howToPlay' ? '>' : '', (canvas.width * 2 / 3) - (howToPlayWidth / 2) - 30, canvas.height / 2 + (howToPlayHeight / 2) + 40);
             break;
 
         case 'howToPlay':
@@ -1000,6 +992,55 @@ function updateCats() {
     });
 }
 
+function drawButtons(){
+    switch (game.state) {
+        case 'title':
+            // スタートの表示
+            let startText = 'Start';
+            let startWidth = ctx.measureText(startText).width;
+            let startHeight = parseInt(ctx.font, 10); // フォントサイズを取得して整数に変換
+            ctx.fillStyle = 'black'; // テキストの色を設定
+            ctx.fillText(startText, (canvas.width * 2 / 3) - (startWidth / 2), canvas.height / 2 + (startHeight / 2));
+            ctx.fillText(game.selection === 'start' ? '>' : '', (canvas.width * 2 / 3) - (startWidth / 2) - 30, canvas.height / 2 + (startHeight / 2));
+            // スタートをクリック可能にする
+            document.getElementById('gameCanvas').addEventListener('click', function (event) {
+                let startX = (canvas.width * 2 / 3) - (startWidth / 2) - 30;
+                let endX = (canvas.width * 2 / 3) + (startWidth / 2) - 30;
+                let startY = canvas.height / 2 - (startHeight / 2);
+                let endY = canvas.height / 2 + (startHeight / 2);
+                if (event.clientX > startX && event.clientX < endX &&
+                    event.clientY > startY && event.clientY < endY) {
+                    gameStart();
+                }
+            });
+
+            // プレイ方法の表示
+            let howToPlayText = 'How to Play';
+            let howToPlayWidth = ctx.measureText(howToPlayText).width;
+            let howToPlayHeight = parseInt(ctx.font, 10); // フォントサイズを取得して整数に変換
+            ctx.fillStyle = 'black'; // テキストの色を設定
+            ctx.fillText(howToPlayText, (canvas.width * 2 / 3) - (howToPlayWidth / 2), canvas.height / 2 + (howToPlayHeight / 2) + 40);
+            ctx.fillText(game.selection === 'howToPlay' ? '>' : '', (canvas.width * 2 / 3) - (howToPlayWidth / 2) - 30, canvas.height / 2 + (howToPlayHeight / 2) + 40);
+            // プレイ方法をクリック可能にする
+            document.getElementById('gameCanvas').addEventListener('click', function (event) {
+                let howToPlayStartX = (canvas.width * 2 / 3) - (howToPlayWidth / 2) - 30;
+                let howToPlayEndX = (canvas.width * 2 / 3) + (howToPlayWidth / 2) - 30;
+                let howToPlayStartY = canvas.height / 2 + 40 - (howToPlayHeight / 2);
+                let howToPlayEndY = canvas.height / 2 + 40 + (howToPlayHeight / 2);
+                if (event.clientX > howToPlayStartX && event.clientX < howToPlayEndX &&
+                    event.clientY > howToPlayStartY && event.clientY < howToPlayEndY) {
+                    howToPlayStart();
+                }
+            });
+        case 'howToPlay':
+
+
+        case 'scoreScreen':
+
+
+    }
+}
+
 
 // ゲームの更新と描画-------------------------------------------------------
 let playerMoveCounter = 0;
@@ -1008,8 +1049,8 @@ let poisonCheeseEffectDuration = 0; // 毒チーズの効果時間
 let powerupEffectDuration = 0; // パワーアップの効果時間
 
 
-const playerMoveInterval = 20; // プレイヤーの移動間隔をフレーム単位で設定
-const catMoveInterval = 30; // 猫の移動間隔をフレーム単位で設定
+const playerMoveInterval = 60; // プレイヤーの移動間隔をフレーム単位で設定
+const catMoveInterval = 70; // 猫の移動間隔をフレーム単位で設定
 
 
 const UPDATE_LOAD_COEFF = 0.5;
@@ -1026,7 +1067,7 @@ function gameLoop() {
         prevTime += targetInterval;
         const now = Date.now();
         const updateTime = now - currentTime;
-        
+
         if (updateTime > targetInterval * UPDATE_LOAD_COEFF) {
             // 処理が重い場合はループを抜ける
             if (prevTime < now - targetInterval) {
@@ -1058,6 +1099,7 @@ function gameLoop() {
             }
             drawGame(); // ゲームの描画
         }
+        drawButtons();
     }
 
     playerMoveCounter++;
