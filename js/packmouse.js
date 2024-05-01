@@ -1019,8 +1019,23 @@ let updated = false;
 
 function gameLoop() {
     let currentTime = Date.now();
+    let frameUpdated = false;
 
     while (currentTime - prevTime > targetInterval * 0.5) {
+        frameUpdated = true;
+        prevTime += targetInterval;
+        const now = Date.now();
+        const updateTime = now - currentTime;
+        
+        if (updateTime > targetInterval * UPDATE_LOAD_COEFF) {
+            // 処理が重い場合はループを抜ける
+            if (prevTime < now - targetInterval) {
+                // 遅延が蓄積しないように調整
+                prevTime = now - targetInterval;
+            }
+            break;
+        }
+
         if (gamePlaying === true && game.state === 'playing') {
             if (playerMoveCounter >= playerMoveInterval) {
                 updatePlayer(); // プレイヤーの位置を更新
@@ -1036,25 +1051,13 @@ function gameLoop() {
             }
         }
 
-        prevTime += targetInterval;
-        const now = Date.now();
-        const updateTime = now - currentTime;
-        if (updateTime > targetInterval * UPDATE_LOAD_COEFF) {
-            // 処理が重い場合はループを抜ける
-            if (prevTime < now - targetInterval) {
-                // 遅延が蓄積しないように調整
-                prevTime = now - targetInterval;
+        if (updated && gamePlaying === true) {
+            window.gameState = game.state;
+            if (game.state === 'playing') {
+                updateGame(); // その他のゲームの更新処理
             }
-            break;
+            drawGame(); // ゲームの描画
         }
-    }
-
-    if (updated && gamePlaying === true) {
-        window.gameState = game.state;
-        if (game.state === 'playing') {
-            updateGame(); // その他のゲームの更新処理
-        }
-        drawGame(); // ゲームの描画
     }
 
     playerMoveCounter++;
