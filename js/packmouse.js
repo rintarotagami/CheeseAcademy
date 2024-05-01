@@ -14,8 +14,7 @@ import { achievements } from './achievement.js';
 console.log(achievements);
 
 import { updateAchievements } from './achievement.js';
-updateAchievements();
-
+import { loadAchievements } from './achievement.js';
 
 import { generateMaze } from './GenerateMaze.js';
 window.gamePlaying = false;
@@ -86,6 +85,9 @@ let game = {
 
 // スコア履歴をキャッシュに保存する関数
 function saveScoreHistory() {
+    game.scoreHistory.push(game.player.score);
+    game.scoreHistory.sort((a, b) => b - a); // スコア履歴を高い順にソート
+    game.scoreHistory = game.scoreHistory.slice(0, 10);  // 上位10位のスコアのみを保持
     localStorage.setItem('scoreHistory', JSON.stringify(game.scoreHistory));
 }
 
@@ -106,7 +108,11 @@ ctx.fillRect(0, 0, canvas.width, canvas.height); // キャンバス全体を黄�
 
 // ゲームの初期化---------------------------------------------------------------------------------
 export function initGame() {
+    // スコア履歴をローカルストレージから読み込む
+    game.scoreHistory = JSON.parse(localStorage.getItem('scoreHistory') || '[]');
+    loadAchievements();
     updateAchievements();
+
     updated = true;
     loadImages(() => {
         game.cheeseImage = images.cheese; // チーズの画像を設定
@@ -197,6 +203,7 @@ function checkCatCatCollision(x, y, currentIndex) {
 
 //Playerの操作-----------------------------------------------------------------------
 function handleKeyDown(event) {
+    event.preventDefault(); // デフォルトのキー機能を一時的に無効に
     if (game.state === 'title') {
         switch (event.key.toLowerCase()) { // キーの大文字小文字を区別しない
             case 'arrowup':
@@ -211,6 +218,7 @@ function handleKeyDown(event) {
                 updated = true;
                 break;
             case ' ':
+            case 'enter':
                 if (game.selection === 'start') {
                     game.state = 'playing';
                     window.gameState = game.state;
@@ -543,14 +551,8 @@ function handleGameOver() {
     game.player.moving = false; // プレイヤーの動きを停止
     game.state = 'loading';
     game.cheese = []; // チーズを全て削除
-    game.scoreHistory.push(game.player.score);
-    game.scoreHistory.sort((a, b) => b - a); // スコア履歴を高い順にソート
-    game.scoreHistory = game.scoreHistory.slice(0, 10);  // 上位10位のスコアのみを保持
 
-    localStorage.setItem('highScore', JSON.stringify(game.scoreHistory[0])); // 最高スコアをlocalStorageに保存
     saveScoreHistory(); //スコア履歴をキャッシュに保存
-
-    localStorage.setItem('achievements', JSON.stringify(achievements)); // 実績をlocalStorageに保存
     updateAchievements();
 
     let row = 0;
@@ -645,7 +647,7 @@ function drawGame() {
             // ハイスコアの表示
             ctx.font = '30px DotGothic16';
             ctx.fillStyle = 'black';
-            let highScoreText = 'High Score: ' + (localStorage.getItem('highScore') || 0);
+            let highScoreText = 'High Score: ' + (game.scoreHistory[0] || 0);
             let highScoreWidth = ctx.measureText(highScoreText).width;
             ctx.fillText(highScoreText, (canvas.width * 2 / 3) - (highScoreWidth / 2), canvas.height / 2 - 40);
 

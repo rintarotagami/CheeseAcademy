@@ -18,9 +18,24 @@ export let achievements = {
     levelCleared10: false
 };
 
+export function loadAchievements() {
+    // ローカルストレージから 'achievements' というキーで保存された実績データを取得
+    const storedAchievements = localStorage.getItem('achievements');
+    // 取得した実績データが存在する場合
+    if (storedAchievements) {
+        // 取得したJSON形式の文字列をオブジェクトに変換し、achievementsオブジェクトにマージする
+        Object.assign(achievements, JSON.parse(storedAchievements));
+    }
+}
 
 
 export function updateAchievements() {
+    // ローカルストレージに現在のアチーブメントオブジェクトの差分を保存
+    const storedAchievements = localStorage.getItem('achievements');
+    const currentAchievements = JSON.stringify(achievements);
+    if (storedAchievements !== currentAchievements) {
+        localStorage.setItem('achievements', currentAchievements);
+    }
 
     if (achievements.playCount >= 1) {
         document.getElementById('achievementMiniMouse').querySelector('img').src = './img/achievement/achievementMiniMouse.PNG';
