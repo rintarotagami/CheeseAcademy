@@ -37,18 +37,18 @@ export function updateAchievements() {
         localStorage.setItem('achievements', currentAchievements);
     }
 
-    if (achievements.playCount >= 1) {
+    if (achievements.playCount >= 100) {
         document.getElementById('achievementMiniMouse').querySelector('img').src = './img/achievement/achievementMiniMouse.PNG';
         document.getElementById('achievementMiniMouse').querySelector('h2').textContent = 'A piece of Cheese';
-        document.getElementById('achievementMiniMouse').querySelector('h3').textContent = '達成条件:初プレイ';
-        document.getElementById('achievementMiniMouse').querySelector('p').textContent = 'プレイ回数：' + achievements.playCount + '/1';
+        document.getElementById('achievementMiniMouse').querySelector('h3').textContent = '達成条件:100回プレイ';
+        document.getElementById('achievementMiniMouse').querySelector('p').textContent = 'プレイ回数：' + achievements.playCount + '/100';
         if (!achievements.played) {
             achievements.played = true;
         }
     }
     if (achievements.maxLevel1 >= 1) {
         document.getElementById('achievement1').style.display = 'block';
-        document.getElementById('achievement1').querySelector('img').src = './img/achievement/achievementMiniMouse.PNG';
+        document.getElementById('achievement1').querySelector('img').src = './img/achievement/achievement1.PNG';
         document.getElementById('achievement1').querySelector('h2').textContent = 'Some cheese!';
         document.getElementById('achievement1').querySelector('h3').textContent = '達成条件:レベル１クリア';
         document.getElementById('achievement1').querySelector('p').textContent = '最高到達レベル：' + achievements.maxLevel1 + '/1';

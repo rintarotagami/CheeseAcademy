@@ -11,6 +11,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Rampart+One&display=swap" rel="stylesheet">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 </head>
 
 <body>
@@ -85,7 +87,10 @@
                     </li>
                     <li>
                         <div class="cheesePin"><img src="./svg/cheesePin.svg" alt=""></div>
-                        <img src="./img/course_02.jpg">
+                        <div id="bomber-wrapper">
+                            <lottie-player src="json/Mouse_Clickme.json" background="transparent" speed="1"
+                                style="width: 300px; height: 300px;" hover></lottie-player>
+                        </div>
                         <p class="course-name">必要な知識も<br>しっかりと取得</p>
                         <p>チーズ作りには、しっかりとした食に関する知識が
                             欠かせません。チーズアカデミーでは、一流講師陣による、
@@ -247,14 +252,8 @@
                         <h1>ACHIEVEMENT</h1>
                         <p id="achievementProgress">0/10</p>
                         <ul>
-                            <li id="achievementMiniMouse">
-                                <img src="img/achievement/achievementMiniMouse_shadow.PNG" alt="実績1">
-                                <h2></h2>
-                                <h3></h3>
-                                <p></p>
-                            </li>
                             <li id="achievement1">
-                                <img src="img/achievement/achievementMiniMouse_shadow.PNG" alt="実績2">
+                                <img src="img/achievement/achievement1_shadow.PNG" alt="実績2">
                                 <h2></h2>
                                 <h3></h3>
                                 <p></p>
@@ -279,6 +278,12 @@
                             </li>
                             <li id="achievement10">
                                 <img src="img/achievement/achievement10_shadow.PNG" alt="実績6">
+                                <h2></h2>
+                                <h3></h3>
+                                <p></p>
+                            </li>
+                            <li id="achievementMiniMouse">
+                                <img src="img/achievement/achievementMiniMouse_shadow.PNG" alt="実績1">
                                 <h2></h2>
                                 <h3></h3>
                                 <p></p>
@@ -325,6 +330,27 @@
     <script src="https://unpkg.com/three@0.142.0/examples/js/loaders/GLTFLoader.js"></script>
     <script src="./js/index.js"></script>
     <script type="module" src="./js/packmouse.js"></script>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+        import { getDatabase, ref, push, set, onChildAdded, remove, onChildRemoved }
+            from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyD5gtALjMPIBGP4ElC-ll7tGH4N_1A8yWg",
+            authDomain: "packmouse-b93fb.firebaseapp.com",
+            projectId: "packmouse-b93fb",
+            storageBucket: "packmouse-b93fb.appspot.com",
+            messagingSenderId: "232540098955",
+            appId: "1:232540098955:web:d1384aa800055adb799f8e"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+    </script>
 </body>
 
 </html>

@@ -1049,8 +1049,8 @@ let poisonCheeseEffectDuration = 0; // 毒チーズの効果時間
 let powerupEffectDuration = 0; // パワーアップの効果時間
 
 
-const playerMoveInterval = 60; // プレイヤーの移動間隔をフレーム単位で設定
-const catMoveInterval = 70; // 猫の移動間隔をフレーム単位で設定
+const playerMoveInterval = 10; // プレイヤーの移動間隔をフレーム単位で設定
+const catMoveInterval = 18; // 猫の移動間隔をフレーム単位で設定
 
 
 const UPDATE_LOAD_COEFF = 0.5;
@@ -1076,7 +1076,9 @@ function gameLoop() {
             }
             break;
         }
+    }
 
+    if(frameUpdated){
         if (gamePlaying === true && game.state === 'playing') {
             if (playerMoveCounter >= playerMoveInterval) {
                 updatePlayer(); // プレイヤーの位置を更新
@@ -1100,9 +1102,10 @@ function gameLoop() {
             drawGame(); // ゲームの描画
         }
         drawButtons();
+
+        playerMoveCounter++;
+        catMoveCounter++;
     }
 
-    playerMoveCounter++;
-    catMoveCounter++;
     requestAnimationFrame(gameLoop); // フレームの終わりにgameLoopを呼び出すことで、ゲームをフレーム単位で管理
 }
