@@ -238,6 +238,14 @@
                 <div id="gameCanvas-wrapper">
                     <img id="game" src=" img/dummy.png">
                     <div id="gameRight"></div>
+                    <div id="rankingRight">
+                    <div>
+                        <label for="name">名前:</label>
+                        <input type="text" id="username" name="username" required>
+                        <button id="ranking-send">送信</button>
+                        <div id="ranking-output" style="overflow: auto; height: 300px;"></div>
+                    </div>
+                    </div>
                     <div id="gameLeft"></div>
                     <canvas id="gameCanvas" width="800" height="600"></canvas>
                 </div>
@@ -330,27 +338,6 @@
     <script src="https://unpkg.com/three@0.142.0/examples/js/loaders/GLTFLoader.js"></script>
     <script src="./js/index.js"></script>
     <script type="module" src="./js/packmouse.js"></script>
-    <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-        import { getDatabase, ref, push, set, onChildAdded, remove, onChildRemoved }
-            from "https://www.gstatic.com/firebasejs/10.11.1/firebase-database.js";
-        // TODO: Add SDKs for Firebase products that you want to use
-        // https://firebase.google.com/docs/web/setup#available-libraries
-
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyD5gtALjMPIBGP4ElC-ll7tGH4N_1A8yWg",
-            authDomain: "packmouse-b93fb.firebaseapp.com",
-            projectId: "packmouse-b93fb",
-            storageBucket: "packmouse-b93fb.appspot.com",
-            messagingSenderId: "232540098955",
-            appId: "1:232540098955:web:d1384aa800055adb799f8e"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-    </script>
 </body>
 
 </html>
