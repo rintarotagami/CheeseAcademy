@@ -35,3 +35,5 @@ sequenceDiagram
 %% title,scoreDisplay,howtoplayの時は、
 %% プレイヤーの操作が行われたら、updateをtrueにする。
 %% updateがtrueの時は、drawGameを実行するように修正します。
+
+%% github action test
