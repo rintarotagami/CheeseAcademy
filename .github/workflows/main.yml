@@ -2,28 +2,23 @@ name: sakura
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
-  build:
-
+  FTP-Deploy-Action:
+    name: FTP-Deploy-Action
     runs-on: ubuntu-latest
-
     steps:
-     - name: Checkout Repository
-       uses: actions/checkout@v3
-     - name: Deploy
-       uses: appleboy/ssh-action@master
-       with:
-          server: ${{ secrets.FTP_HOST }} 
+      - name: 🚚 Get latest code
+        uses: actions/checkout@v2.3.2
+
+      - name: 📂 Sync files
+        uses: SamKirkland/FTP-Deploy-Action@4.0.0
+        with:
+          server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }} 
+          password: ${{ secrets.ftp_password }}
           local-dir: ./
-          server-dir: /home/rin-study/www/cheese-academy.com/ 
-          exclude: 
-            - wp-config.php
-            - .git/**
-            - .gitignore
-    
+          server-dir: /home/rin-study/www/cheese-academy.com/
