@@ -1,0 +1,29 @@
+name: sakura
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+     - name: Checkout Repository
+       uses: actions/checkout@v3
+     - name: Deploy
+       uses: appleboy/ssh-action@master
+       with:
+          server: ${{ secrets.FTP_HOST }} 
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }} 
+          local-dir: ./
+          server-dir: /home/rin-study/www/cheese-academy.com/ 
+          exclude: 
+            - wp-config.php
+            - .git/**
+            - .gitignore
+    
