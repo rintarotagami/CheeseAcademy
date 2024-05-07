@@ -3,6 +3,7 @@ name: sakura
 on:
   push:
     branches: ["main"]
+  workflow_dispatch: #手動実行用
 
 jobs:
   FTP-Deploy-Action:
