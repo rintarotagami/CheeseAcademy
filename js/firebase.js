@@ -57,3 +57,4 @@ $("#rankingButton").on("click", function() {
         rankingRight.css("display", "none");
     }
 });
+
