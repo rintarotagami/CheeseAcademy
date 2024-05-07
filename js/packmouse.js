@@ -241,7 +241,9 @@ function howToPlayStart() {
 
 //Playerの操作-----------------------------------------------------------------------
 function handleKeyDown(event) {
-    event.preventDefault(); // デフォルトのキー機能を一時的に無効に
+    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(event.key)) {
+        event.preventDefault(); // 矢印の上下左右キーとスペースのデフォルト機能を無効に
+    }
     if (game.state === 'title') {
         switch (event.key.toLowerCase()) { // キーの大文字小文字を区別しない
             case 'arrowup':

@@ -20,24 +20,64 @@ const app = initializeApp(firebaseConfig);
 const ranking = getDatabase(app); //RealtimeDBに接続
 const rankingRef = ref(ranking, 'ranking'); //RealtimeDatabase"ranking"を使うよ
 
+// Add a declaration for rankingList variable before using it
+const rankingList = $("#ranking-output");
+
+// 読み込み時に処理
+$(document).ready(function() {
+    // ローカルストレージにすでにユーザー名が保存されている場合、ローカルストレージからユーザー名を取得して入力フィールドにセット
+    const savedplayername = localStorage.getItem('playername');
+    if (savedplayername) {
+        $("#playername").text(savedplayername);
+        $("#playername").css("display", "block");
+        $("#playername-input").remove(); // ユーザー名入力フィールドを削除
+    } 
+});
 
 // ランキングデータを送信する部分
-$("#ranking-send").on("click", function() {
-    const name = $("#username").val();
-    const highScore = JSON.parse(localStorage.getItem('scoreHistory'))[0];
-    const newRankingRef = push(rankingRef); // pushを使用して新しい参照を作成
-    const newRanking = {
-        name: name,
-        score: highScore    
-    };
-    set(newRankingRef, newRanking); // 新しい参照にデータをセット
+$("#ranking-send").on("click", function () {
+    if ($("#playername-input").length > 0) { // playername-inputがあるかどうかをチェック
+        const name = $("#playername-input").val().trim(); // 名前の前後の空白を削除
+        if (name === "") {
+            alert("名前を入力してください");
+            return;
+        }
+        const highScore = JSON.parse(localStorage.getItem('scoreHistory'))[0];
+        const newRankingRef = push(rankingRef); // pushを使用して新しい参照を作成
+        const newRanking = {
+            name: name,
+            score: highScore,
+            date: new Date().toLocaleString()
+        };
+
+        // 既存のリストをチェックして同じ名前とスコアの組み合わせがあるか確認
+        let isDuplicate = false;
+        rankingList.children().each(function () {
+            const text = $(this).text();
+            const [existingName, existingScore] = text.split(': ');
+            if (existingName === newRanking.name && parseInt(existingScore) === newRanking.score) {
+                isDuplicate = true;
+                return false; // ループを抜ける
+            }
+        });
+
+        if (!isDuplicate) {
+            set(newRankingRef, newRanking); // 新しい参照にデータをセット
+            localStorage.setItem('playername', name); // ユーザー名をローカルストレージに保存
+            $("#playername-input").remove(); // ユーザー名入力フィールドを削除
+            $("#playername").text(name);
+            $("#playername").css("display", "block");
+            
+        } else {
+            console.log("同じ名前とスコアのデータが既に存在します:", newRanking);
+        }
+    }
 });
 
 // ランキングデータを取得して表示する部分
-onChildAdded(rankingRef, function(snapshot, prevChildKey) {
+onChildAdded(rankingRef, function (snapshot, prevChildKey) {
     const rankingData = snapshot.val();
     console.log("取得したランキングデータ:", rankingData);
-    const rankingList = $("#ranking-output");
     if (rankingData && typeof rankingData === 'object' && rankingData.name && rankingData.score) {
         // li要素としてリストの先頭に追加し、CSSで順位を表示
         rankingList.prepend(`<li class="ranking">${rankingData.name}: ${rankingData.score}</li>`);
@@ -49,12 +89,11 @@ onChildAdded(rankingRef, function(snapshot, prevChildKey) {
     orderByChild: 'score'
 });
 
-$("#rankingButton").on("click", function() {
+$("#rankingButton").on("click", function (event) {
     const rankingRight = $("#rankingRight");
     if (rankingRight.css("display") === "none") {
-        rankingRight.css("display", "block");
+        rankingRight.css("display", "flex");
     } else {
         rankingRight.css("display", "none");
     }
 });
-

@@ -207,6 +207,9 @@
 }
 
 #rankingRight {
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
     right: 0;
     background-color: #f8f9fa; /* 明るいグレーの背景色 */
     border-radius: 10px; /* 角を丸く */
@@ -222,13 +225,14 @@
 }
 
 #rankingRight label {
+    height: 100%;
     font-family: 'DotGothic16', sans-serif; /* フォントをDotGothic16に変更 */
     font-size: 1.2rem; /* フォントサイズを調整 */
     color: #333; /* フォントの色をダークグレーに設定 */
 }
 
 #ranking-output{
-    height: 80%;
+    height: 70%;
     margin-top: 15px;
     overflow: auto;
 }
@@ -251,8 +255,17 @@
     background: #555; /* ホバー時のつまみ部分の背景色 */
 }
 
+#playername-wrapper{
+    height: 3rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
 
-#username {
+#playername {
+    all: unset;
+    display: none;
+    width: 70%;
     padding: 8px 12px;
     border: 2px solid #ccc;
     border-radius: 4px;
@@ -261,7 +274,25 @@
     transition: border-color 0.3s ease-in-out;
 }
 
-#username:focus {
+#playername-input {
+    all: unset;
+    width: 70%;
+    padding: 8px 12px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-family: 'DotGothic16', sans-serif;
+    transition: border-color 0.3s ease-in-out;
+}
+
+#playername-input-wrapper{
+    width: 70%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+#playername-input:focus {
     border-color: #f0ad4e;
     outline: none;
 }
