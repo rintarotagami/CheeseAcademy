@@ -181,4 +181,93 @@
     font-size: 0.5rem;
 }
 
+.ranking{
+    font-family: 'DotGothic16', sans-serif; /* フォントをDotGothic16に変更 */
+    font-size: 1rem; /* フォントサイズを調整 */
+    color: #333; /* フォントの色をダークグレーに設定 */
+}
+
+.ranking::before {
+    content: counter(item) ". ";
+    counter-increment: item;
+}
+
+#ranking-output {
+    counter-reset: item;
+}
+
+#rankingButton{
+    margin: auto 0;
+    width: 100px;
+    height: 80%;
+    background-color: #f0ad4e;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+
+#rankingRight {
+    right: 0;
+    background-color: #f8f9fa; /* 明るいグレーの背景色 */
+    border-radius: 10px; /* 角を丸く */
+    padding: 30px; /* 内側の余白 */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* ソフトな影を追加 */
+    width: 90%; /* 幅を90%に設定 */
+    height: 80%;
+    max-width: 500px; /* 最大幅を500pxに設定 */
+    overflow: hidden; /* 内容がはみ出した場合に隠す */
+    margin: auto 3%;
+    transition: all 0.3s ease-in-out; /* スムーズな表示切り替え */
+    z-index: 100;
+}
+
+#rankingRight label {
+    font-family: 'DotGothic16', sans-serif; /* フォントをDotGothic16に変更 */
+    font-size: 1.2rem; /* フォントサイズを調整 */
+    color: #333; /* フォントの色をダークグレーに設定 */
+}
+
+#ranking-output{
+    height: 80%;
+    margin-top: 15px;
+    overflow: auto;
+}
+
+#ranking-output::-webkit-scrollbar {
+    width: 25px; /* スクロールバーの幅 */
+}
+
+#ranking-output::-webkit-scrollbar-track {
+    background: #f1f1f1; /* スクロールバーのトラック部分の背景色 */
+    border-radius: 10px; /* トラック部分の角を丸く */
+}
+
+#ranking-output::-webkit-scrollbar-thumb {
+    background: #888; /* スクロールバーのつまみ部分の背景色 */
+    border-radius: 10px; /* つまみ部分の角を丸く */
+}
+
+#ranking-output::-webkit-scrollbar-thumb:hover {
+    background: #555; /* ホバー時のつまみ部分の背景色 */
+}
+
+
+#username {
+    padding: 8px 12px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-family: 'DotGothic16', sans-serif;
+    transition: border-color 0.3s ease-in-out;
+}
+
+#username:focus {
+    border-color: #f0ad4e;
+    outline: none;
+}
+
+#ranking-send {
+    font-family: 'DotGothic16', sans-serif; /* フォントをArialに変更 */
+}
+
 

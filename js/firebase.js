@@ -18,23 +18,42 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const ranking = getDatabase(app); //RealtimeDBに接続
-const rankingRef = ref(ranking, 'ranking'); //RealtimeDatabase”ranking“を使うよ
+const rankingRef = ref(ranking, 'ranking'); //RealtimeDatabase"ranking"を使うよ
 
-$("#ranking-send").on("click", function() { //ranking-sendをクリックしたら
-    const name = $("#username").val(); //usernameから入力データを取得
-    const highScore =game.scoreHistory[0]; //ハイスコアを取得
-    const rankingRef = ref(ranking, 'ranking');
+
+// ランキングデータを送信する部分
+$("#ranking-send").on("click", function() {
+    const name = $("#username").val();
+    const highScore = JSON.parse(localStorage.getItem('scoreHistory'))[0];
+    const newRankingRef = push(rankingRef); // pushを使用して新しい参照を作成
     const newRanking = {
         name: name,
-        score: highScore
+        score: highScore    
     };
-    set(rankingRef, newRanking); //DBに値をセット
+    set(newRankingRef, newRanking); // 新しい参照にデータをセット
 });
 
+// ランキングデータを取得して表示する部分
 onChildAdded(rankingRef, function(snapshot, prevChildKey) {
     const rankingData = snapshot.val();
+    console.log("取得したランキングデータ:", rankingData);
     const rankingList = $("#ranking-output");
-    rankingList.append(`<p>${rankingData.name}: ${rankingData.score}</p>`);
+    if (rankingData && typeof rankingData === 'object' && rankingData.name && rankingData.score) {
+        // li要素としてリストの先頭に追加し、CSSで順位を表示
+        rankingList.prepend(`<li class="ranking">${rankingData.name}: ${rankingData.score}</li>`);
+    } else {
+        console.log("不正なデータ形式:", rankingData);
+    }
+}, {
+    // スコアを基に降順でデータを取得
+    orderByChild: 'score'
 });
 
-
+$("#rankingButton").on("click", function() {
+    const rankingRight = $("#rankingRight");
+    if (rankingRight.css("display") === "none") {
+        rankingRight.css("display", "block");
+    } else {
+        rankingRight.css("display", "none");
+    }
+});
