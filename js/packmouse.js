@@ -23,29 +23,27 @@ import { generateMaze } from './GenerateMaze.js';
 window.gamePlaying = false;
 window.gameState = 'title';
 
-// 画像の読み込み------------------------------------------------------------------------------
 const images = {};
 
 function loadImages(callback) {
     let loadedImagesCount = 0;
-    const baseImagePath = window.location.hostname === 'rin-study.sakura.ne.jp' ? 'https://rin-study.sakura.ne.jp/cheese-academy/img' : '../img';
     const imageSources = {
-        catDown: `${baseImagePath}/catDown.png`,
-        catUp: `${baseImagePath}/catUp.png`,
-        catLeft: `${baseImagePath}/catLeft.png`,
-        catRight: `${baseImagePath}/catRight.png`,
-        mouseDown: `${baseImagePath}/mouseDown.png`,
-        mouseUp: `${baseImagePath}/mouseUp.png`,
-        mouseLeft: `${baseImagePath}/mouseLeft.png`,
-        mouseRight: `${baseImagePath}/mouseRight.png`,
-        cheese: `${baseImagePath}/cheese.png`,
-        mouseDead: `${baseImagePath}/mouseDead.png`,
-        title: `${baseImagePath}/packmouseTitle.png`,
-        heart: `${baseImagePath}/emote/heart.svg`,
-        cheeseWall: `${baseImagePath}/cheeseWall.png`,
-        rainbowCheese: `${baseImagePath}/rainbowCheese.gif`,
-        poisonCheese: `${baseImagePath}/poisonCheese.png`,
-        controller: `${baseImagePath}/controller.png`,
+        catDown: '../img/catDown.png',
+        catUp: '../img/catUp.png',
+        catLeft: '../img/catLeft.png',
+        catRight: '../img/catRight.png',
+        mouseDown: '../img/mouseDown.png',
+        mouseUp: '../img/mouseUp.png',
+        mouseLeft: '../img/mouseLeft.png',
+        mouseRight: '../img/mouseRight.png',
+        cheese: '../img/cheese.png',
+        mouseDead: '../img/mouseDead.png',
+        title: '../img/packmouseTitle.png',
+        heart: '../svg/emote/heart.svg',
+        cheeseWall: '../img/cheeseWall.png',
+        rainbowCheese: '../img/rainbowCheese.gif',
+        poisonCheese: '../img/poisonCheese.png',
+        controller: '../img/controller.png',
     };
 
     const imageKeys = Object.keys(imageSources);
