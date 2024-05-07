@@ -7,9 +7,8 @@ function appendScript(URL) {
 
 appendScript('js/sounds.js');
 appendScript('js/switchGameVisibility.js');
-appendScript('js/generateMaze.js');
+appendScript('js/GenerateMaze.js');
 appendScript('js/achievement.js');
-appendScript('js/generateMaze.js');
 appendScript('js/firebase.js');
 
 
