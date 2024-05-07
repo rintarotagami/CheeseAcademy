@@ -20,7 +20,7 @@ const app = initializeApp(firebaseConfig);
 const ranking = getDatabase(app); //RealtimeDBに接続
 const rankingRef = ref(ranking, 'ranking'); //RealtimeDatabase”ranking“を使うよ
 
-$("ranking-send").on("click", function() { //ranking-sendをクリックしたら
+$("#ranking-send").on("click", function() { //ranking-sendをクリックしたら
     const name = $("#username").val(); //usernameから入力データを取得
     const highScore =game.scoreHistory[0]; //ハイスコアを取得
     const rankingRef = ref(ranking, 'ranking');
