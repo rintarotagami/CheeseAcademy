@@ -39,7 +39,6 @@ function loadImages(callback) {
         cheese: '../img/cheese.png',
         mouseDead: '../img/mouseDead.png',
         title: '../img/packmouseTitle.png',
-        heart: '../svg/emote/heart.svg',
         cheeseWall: '../img/cheeseWall.png',
         rainbowCheese: '../img/rainbowCheese.gif',
         poisonCheese: '../img/poisonCheese.png',
