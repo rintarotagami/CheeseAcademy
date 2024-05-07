@@ -22,55 +22,59 @@ const rankingRef = ref(ranking, 'ranking'); //RealtimeDatabase"ranking"を使う
 
 // Add a declaration for rankingList variable before using it
 const rankingList = $("#ranking-output");
+const savedplayername = localStorage.getItem('playername');
 
 // 読み込み時に処理
-$(document).ready(function() {
+$(document).ready(function () {
     // ローカルストレージにすでにユーザー名が保存されている場合、ローカルストレージからユーザー名を取得して入力フィールドにセット
-    const savedplayername = localStorage.getItem('playername');
     if (savedplayername) {
         $("#playername").text(savedplayername);
         $("#playername").css("display", "block");
         $("#playername-input").remove(); // ユーザー名入力フィールドを削除
-    } 
+    }
 });
 
 // ランキングデータを送信する部分
 $("#ranking-send").on("click", function () {
+    let name = savedplayername;
     if ($("#playername-input").length > 0) { // playername-inputがあるかどうかをチェック
-        const name = $("#playername-input").val().trim(); // 名前の前後の空白を削除
+        name = $("#playername-input").val().trim(); // 名前の前後の空白を削除
         if (name === "") {
             alert("名前を入力してください");
             return;
         }
-        const highScore = JSON.parse(localStorage.getItem('scoreHistory'))[0];
-        const newRankingRef = push(rankingRef); // pushを使用して新しい参照を作成
-        const newRanking = {
-            name: name,
-            score: highScore,
-            date: new Date().toLocaleString()
-        };
+    }
+    const highScore = JSON.parse(localStorage.getItem('scoreHistory'))[0];
+    const newRankingRef = push(rankingRef); // pushを使用して新しい参照を作成
+    const newRanking = {
+        name: name,
+        score: highScore,
+        date: new Date().toLocaleString()
+    };
 
-        // 既存のリストをチェックして同じ名前とスコアの組み合わせがあるか確認
-        let isDuplicate = false;
-        rankingList.children().each(function () {
-            const text = $(this).text();
-            const [existingName, existingScore] = text.split(': ');
-            if (existingName === newRanking.name && parseInt(existingScore) === newRanking.score) {
-                isDuplicate = true;
-                return false; // ループを抜ける
-            }
-        });
+    // 既存のリストをチェックして同じ名前とスコアの組み合わせがあるか確認
+    let isDuplicate = false;
+    rankingList.children().each(function () {
+        const text = $(this).text();
+        const [existingName, existingScore] = text.split(': ');
+        if (existingName === newRanking.name && parseInt(existingScore) === newRanking.score) {
+            isDuplicate = true;
+            return false; // ループを抜ける
+        }
+    });
 
-        if (!isDuplicate) {
-            set(newRankingRef, newRanking); // 新しい参照にデータをセット
+    if (!isDuplicate) {
+        set(newRankingRef, newRanking); // 新しい参照にデータをセット
+        if ($("#playername-input").length > 0) { // playername-inputがあるかどうかをチェック
             localStorage.setItem('playername', name); // ユーザー名をローカルストレージに保存
             $("#playername-input").remove(); // ユーザー名入力フィールドを削除
             $("#playername").text(name);
             $("#playername").css("display", "block");
-            
-        } else {
-            console.log("同じ名前とスコアのデータが既に存在します:", newRanking);
         }
+
+    } else {
+        alert("同じ名前とスコアのデータが既に存在します: ");
+        
     }
 });
 
